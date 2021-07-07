@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Dodge the Blocks</title>
+    <link href="./style/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body onload="startGame()">	
+		<button onClick="resize()">Resize</button>
+		<p>
+        <input type="text" id="width" value="400"> x
+		<input type="text" id="height" value="500">
+		</p>
+		<canvas id="canvas" width="400px" height="500px">canvas</canvas>
+		<p> Dodge the Blocks!<br>Score: <span id="score">0</span>   Level: <span id="level">1</span></p>
+		<button onClick="start()">Start</button>
+		<button onClick="stop()">Stop</button>
+		<button onClick="reset()">Reset</button>
+		<p>WASD or Arrow Keys to move. Shift to slow down.<br>Dodge the blocks for as long as you can! Can you reach a new high score?</p>
+
+        
+		<script src="./scripts/keyboardInput.js"></script>
+        <script src="./scripts/script.js"></script>
+  </body>
+</html>
