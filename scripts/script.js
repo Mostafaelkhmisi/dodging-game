@@ -1,3 +1,5 @@
+// const canvas = document.getElementById('canvas');
+// const ctx = canvas.getContext('2d');
 
 let player;
 let gameLife;
@@ -10,6 +12,7 @@ let diff;
 let score;
 let num;
 let progress;
+
 
 let inputSize = {
 	width : document.getElementById("width"),
@@ -34,7 +37,7 @@ function init(){
 	progress = 0;
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
-	player = new component(10,10,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
+	player = new component(50,50,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
 		if(isKeyDown("shift")){
 			speed = 2;
 		}
@@ -58,7 +61,7 @@ function init(){
 			c.x -= speed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 		}
-	});
+	}, "image");
 	gameObjects.add(player,2);
 	player.update();
 }
@@ -89,6 +92,7 @@ function gameUpdate(){
 
 function spawnObject(){
 	// side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
+	side = 3
 	x=0;
 	y=0;
 	speedX = 0;
@@ -124,13 +128,13 @@ function spawnObject(){
 		if(!c.isOnScreen()){
 			gameObjects.remove(c);
 		}
-	});
+	}, "blocks");
 	obj.speedX = speedX;
 	obj.speedY = speedY;
 	gameObjects.add(obj,1);
 }
 
-function component(width, height, color, x, y, action){
+function component(width, height, color, x, y, action, type){
 	this.width = width;
 	this.height = height;
 	this.color = color;
@@ -139,13 +143,30 @@ function component(width, height, color, x, y, action){
 	this.speedY = 0;
 	this.y = y;
 	this.action = action;
+	
+	if (type == "image") {
+		this.img = new Image();
+		this.img.src = "./style/giphy.gif";
+		this.img.onload = () => {
+			// ctx.clearRect(0, 0, this.width, this.height);
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+		};
+	}
+
 	this.update = function(){
 		action(this);
 		this.x += this.speedX;
 		this.y += this.speedY;
 		ctx = gameArea.context;
 		ctx.fillStyle = color;
-		ctx.fillRect(this.x, this.y, this.width, this.height);
+		if (type == "image") {
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+		}else{
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+		}
+		
+
+
 	}
 	this.isTouching = function(other){
 		let yes = true;
