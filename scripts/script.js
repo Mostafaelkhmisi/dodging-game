@@ -37,7 +37,7 @@ function init(){
 	progress = 0;
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
-	player = new component(50,50,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
+	player = new component(30,30,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
 		if(isKeyDown("shift")){
 			speed = 2;
 		}
@@ -91,8 +91,8 @@ function gameUpdate(){
 }
 
 function spawnObject(){
-	// side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
-	side = 3
+	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
+	// side = 3
 	x=0;
 	y=0;
 	speedX = 0;
