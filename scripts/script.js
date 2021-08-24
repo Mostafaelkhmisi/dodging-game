@@ -2,6 +2,7 @@
 // const ctx = canvas.getContext('2d');
 
 let player;
+let theShot;
 let gameLife;
 let running = false;
 let initial = true;
@@ -12,7 +13,11 @@ let diff;
 let score;
 let num;
 let progress;
+let upgrades=0;
+let planeX;
+let planeY;
 
+let overlay = document.getElementById("overlay")
 
 let inputSize = {
 	width : document.getElementById("width"),
@@ -45,22 +50,28 @@ function init(){
 			speed = 5;
 		}
 		
-		if(isKeyDown("w") || isKeyDown("up")){
+		if(isKeyDown("w")){
 			c.y -= speed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
+			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
 		}
-		if(isKeyDown("s") || isKeyDown("down")){
+		if(isKeyDown("s")){
 			c.y += speed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
+			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
 		}
-		if(isKeyDown("d") || isKeyDown("right")){
+		if(isKeyDown("d")){
 			c.x += speed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
+			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
 		}
-		if(isKeyDown("a") || isKeyDown("left")){
+		if(isKeyDown("a")){
 			c.x -= speed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
+			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
 		}
+
+
 	}, "image");
 	gameObjects.add(player,2);
 	player.update();
@@ -71,7 +82,52 @@ function gameUpdate(){
 		if(diff >= 90){ // to calculate how fast to level up
 			diff = 20;
 			num += 1;
+
+
+					// the Shot just needs to know how to make it destroy the block it touches
+					upgrades += 1;
+					side = Math.trunc(Math.random() * 4);
+					speedX = 0;
+					speedY = 0;
+					switch(side){
+						case 0:
+							x = planeX;
+							y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+							speedX = blockSpeed;
+							break;  // Left Side Blocks 
+						case 2:
+							x = planeX;
+							y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+							speedX = -1 * blockSpeed;
+							break; // right Side Blocks 
+						case 1:
+							x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+							y = planeY;
+							speedY = blockSpeed;
+							break;  // top Side Blocks 
+						case 3:
+							x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+							y = planeY;
+							speedY = -1 * blockSpeed;
+							break; // bottom Side Blocks 
+					}
+					theShot = new component(40,40,"green",planeX,planeY,function(c){
+						if(c.isTouching(obj)){
+							gameObjects.remove(c);
+							console.log("destroyeddd an obj");
+						}
+						if(!c.isOnScreen()){
+							gameObjects.remove(c);
+						}
+					}, "Shot");
+					theShot.speedX = speedX;
+					theShot.speedY = speedY;
+					gameObjects.add(theShot,1);
+
+					
+
 			scoreboard.level.innerText = num;
+
 		}
 		else{
 			diff += .5;
@@ -119,12 +175,17 @@ function spawnObject(){
 			speedY = -1 * blockSpeed;
 			break; // bottom Side Blocks 
 	}
-	obj = new component(20,20,"green",x,y,function(c){
+	obj = new component(40,40,"green",x,y,function(c){
 		if(c.isTouching(player)){
 			alive = false;
 			running = false;
+			overlay.style.display = "flex";
 			console.log("Game finished with a score of: "+score);
 		}
+		// if(c.isShooted(theShot)){
+		// 	console.log("Block Destroyed");
+		// 	gameObjects.remove(c);
+		// }
 		if(!c.isOnScreen()){
 			gameObjects.remove(c);
 		}
@@ -146,9 +207,21 @@ function component(width, height, color, x, y, action, type){
 	
 	if (type == "image") {
 		this.img = new Image();
-		this.img.src = "./style/giphy.gif";
+		this.img.src = "./images/giphy.png";
 		this.img.onload = () => {
 			// ctx.clearRect(0, 0, this.width, this.height);
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+		};
+	}else if (type == "blocks"){
+		this.img = new Image();
+		this.img.src = "./images/bomb.png";
+		this.img.onload = () => {
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+		};
+	}else if (type == "Shot"){
+		this.img = new Image();
+		this.img.src = "./images/test-image-3.jpg";
+		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
 	}
@@ -161,23 +234,35 @@ function component(width, height, color, x, y, action, type){
 		ctx.fillStyle = color;
 		if (type == "image") {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
-		}else{
-			ctx.fillRect(this.x, this.y, this.width, this.height);
+		}else if (type == "blocks"){
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		}else if (type == "Shot"){
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			
 		}
-		
-
 
 	}
 	this.isTouching = function(other){
 		let yes = true;
-		if(other.x + other.width < this.x || this.x + this.width < other.x){
+		if(other.x + other.width -5 < this.x || this.x + this.width -5 < other.x){
 			yes = false;
 		}
-		if(other.y + other.height < this.y || this.y + this.height < other.y){
+		if(other.y + other.height -5 < this.y || this.y + this.height -5 < other.y){
 			yes = false;
 		}
 		return yes;
 	}
+	this.isShooted = function(other){
+			let yes = true;
+			if(other.x + other.width < this.x || this.x + this.width < other.x){
+				yes = false;
+			}
+			if(other.y + other.height < this.y || this.y + this.height < other.y){
+				yes = false;
+			}
+			return yes;
+	}
+
 	this.isOnScreen = function(){
 		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
 			return true;
@@ -268,9 +353,13 @@ function reset(){
 }
 
 function start(){
-	if(alive){
-		running = true;
-	}
+	gameObjects.clear(); //  RESET GAME AND START AGAIN
+	gameArea.clear();
+	init();
+	alive = true;
+	running = true;
+
+	overlay.style.display = "none";
 }
 
 function stop(){

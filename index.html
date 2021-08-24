@@ -7,7 +7,7 @@
     <link href="./style/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body onload="startGame()">	
-		<button onClick="resize()">Resize</button>
+		<!-- <button onClick="resize()">Resize</button>
 		<p>
         <input type="text" id="width" value="400"> x
 		<input type="text" id="height" value="500">
@@ -17,8 +17,23 @@
 		<button onClick="start()">Start</button>
 		<button onClick="stop()">Stop</button>
 		<button onClick="reset()">Reset</button>
-		<p>WASD or Arrow Keys to move. Shift to slow down.<br>Dodge the blocks for as long as you can! Can you reach a new high score?</p>
+		<p>WASD or Arrow Keys to move. Shift to slow down.<br>Dodge the blocks for as long as you can! Can you reach a new high score?</p> -->
 
+		<div id="overlay" class="overlay">
+			<div>			
+				<p class="instructions">WASD Keys to move. Shift to slow down.<br>Dodge the blocks for as long as you can! Can you reach a new high score?</p>
+				<div class="buttonsContainer">
+					<button id="disabledInputs1" onClick="start()" class="buttons">Start</button>
+				</div>
+			</div>
+	
+		</div>
+
+		<p id="canvasText" class="canvasText instructions"> Score: <span id="score">0</span>   Level: <span id="level">1</span></p>
+
+		<div class="canvasContainer">
+			<canvas id="canvas" width="1050px" height="685px">  </canvas>
+		</div>
         
 		<script src="./scripts/keyboardInput.js"></script>
         <script src="./scripts/script.js"></script>
