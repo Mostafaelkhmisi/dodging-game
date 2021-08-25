@@ -2,7 +2,7 @@
 // const ctx = canvas.getContext('2d');
 
 let player;
-let theShot;
+let theShot = null;
 let gameLife;
 let running = false;
 let initial = true;
@@ -84,45 +84,48 @@ function gameUpdate(){
 			num += 1;
 
 
-					// the Shot just needs to know how to make it destroy the block it touches
-					upgrades += 1;
-					side = Math.trunc(Math.random() * 4);
-					speedX = 0;
-					speedY = 0;
-					switch(side){
-						case 0:
-							x = planeX;
-							y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-							speedX = blockSpeed;
-							break;  // Left Side Blocks 
-						case 2:
-							x = planeX;
-							y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-							speedX = -1 * blockSpeed;
-							break; // right Side Blocks 
-						case 1:
-							x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-							y = planeY;
-							speedY = blockSpeed;
-							break;  // top Side Blocks 
-						case 3:
-							x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-							y = planeY;
-							speedY = -1 * blockSpeed;
-							break; // bottom Side Blocks 
+			setInterval(() => {  //after Taking the upgrade will keep firing every 5 seconds 
+				// the Shot just needs to know how to make it destroy the block it touches
+				upgrades += 1;
+				side = Math.trunc(Math.random() * 4);
+				speedX = 0;
+				speedY = 0;
+				switch(side){
+					case 0:
+						x = planeX;
+						y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+						speedX = blockSpeed;
+						break;  // Left Side Blocks 
+					case 2:
+						x = planeX;
+						y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+						speedX = -1 * blockSpeed;
+						break; // right Side Blocks 
+					case 1:
+						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+						y = planeY;
+						speedY = blockSpeed;
+						break;  // top Side Blocks 
+					case 3:
+						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+						y = planeY;
+						speedY = -1 * blockSpeed;
+						break; // bottom Side Blocks 
+				}
+				theShot = new component(40,40,"green",planeX,planeY,function(c){
+					if(c.isTouching(obj)){
+						gameObjects.remove(c);
+						console.log("destroyeddd an obj");
 					}
-					theShot = new component(40,40,"green",planeX,planeY,function(c){
-						if(c.isTouching(obj)){
-							gameObjects.remove(c);
-							console.log("destroyeddd an obj");
-						}
-						if(!c.isOnScreen()){
-							gameObjects.remove(c);
-						}
-					}, "Shot");
-					theShot.speedX = speedX;
-					theShot.speedY = speedY;
-					gameObjects.add(theShot,1);
+					if(!c.isOnScreen()){
+						gameObjects.remove(c);
+					}
+				}, "Shot");
+				theShot.speedX = speedX;
+				theShot.speedY = speedY;
+				gameObjects.add(theShot,1);
+			}, 5000);
+					
 
 					
 
@@ -182,10 +185,13 @@ function spawnObject(){
 			overlay.style.display = "flex";
 			console.log("Game finished with a score of: "+score);
 		}
-		// if(c.isShooted(theShot)){
-		// 	console.log("Block Destroyed");
-		// 	gameObjects.remove(c);
-		// }
+		if (theShot != null) {
+			if(c.isTouching(theShot)){
+				console.log("bomb Destroyed");
+				gameObjects.remove(c);
+			}
+		}
+
 		if(!c.isOnScreen()){
 			gameObjects.remove(c);
 		}
@@ -252,16 +258,16 @@ function component(width, height, color, x, y, action, type){
 		}
 		return yes;
 	}
-	this.isShooted = function(other){
-			let yes = true;
-			if(other.x + other.width < this.x || this.x + this.width < other.x){
-				yes = false;
-			}
-			if(other.y + other.height < this.y || this.y + this.height < other.y){
-				yes = false;
-			}
-			return yes;
-	}
+	// this.isShooted = function(other){
+	// 		let yes = true;
+	// 		if(other.x + other.width < this.x || this.x + this.width < other.x){
+	// 			yes = false;
+	// 		}
+	// 		if(other.y + other.height < this.y || this.y + this.height < other.y){
+	// 			yes = false;
+	// 		}
+	// 		return yes;
+	// }
 
 	this.isOnScreen = function(){
 		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
