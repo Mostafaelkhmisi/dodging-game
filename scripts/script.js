@@ -13,7 +13,9 @@ let diff;
 let score;
 let num;
 let progress;
+let upgradeObj;
 let upgrades=0;
+let currentUpgrades=0;
 let planeX;
 let planeY;
 
@@ -84,71 +86,48 @@ function gameUpdate(){
 			num += 1;
 
 
-			setInterval(() => {  //after Taking the upgrade will keep firing every 5 seconds 
-				// the Shot just needs to know how to make it destroy the block it touches
-				upgrades += 1;
-				// side = Math.trunc(Math.random() * 4);
-				side = 4;
-				speedX = 0;
-				speedY = 0;
-				switch(side){
-					case 0:
-						x = planeX;
-						y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-						speedX = blockSpeed;
-						break;  // Left Side Blocks 
-					case 2:
-						x = planeX;
-						y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-						speedX = -1 * blockSpeed;
-						break; // right Side Blocks 
-					case 1:
-						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-						y = planeY;
-						speedY = blockSpeed;
-						break;  // top Side Blocks 
-					case 3:
-						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-						y = planeY;
-						speedY = -1 * blockSpeed;
-						break; // bottom Side Blocks
-					case 4:
-						// object.x = object.x + speed * Math.cos(angleRad);
-						// object.y = object.y + speed * Math.sin(angleRad);
-						var angle = Math.trunc(Math.random() * 180); //angle in degrees
-						var angleRad = angle * (Math.PI/180); //angle in radians
-						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-						y = planeY;
-						speedY = -1 * Math.sin(angleRad) + 1;						
-						speedX = Math.cos(angleRad);
-						console.log(speedX, speedY)
-						break; // top radius
-					case 5:
-						var angle = Math.trunc(Math.random() * 180); //angle in degrees
-						var angleRad = angle * (Math.PI/180); //angle in radians
-						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-						y = planeY;
-						speedY = Math.sin(angleRad);						
-						speedX = -1 * Math.cos(angleRad) + 1;
-						console.log(speedX, speedY)
-						break; // bottom radius
+			side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
+			x=0;
+			y=0;
+			speedX = 0;
+			speedY = 0;
+			switch(side){
+				case 0:
+					x = -20;
+					y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+					speedX = blockSpeed+1;
+					break;  // Left Side Blocks 
+				case 2:
+					x = gameArea.canvas.width;
+					y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+					speedX = -2 * blockSpeed;
+					break; // right Side Blocks 
+				case 1:
+					x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+					y = -20;
+					speedY = blockSpeed+1;
+					break;  // top Side Blocks 
+				case 3:
+					x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+					y = gameArea.canvas.height;
+					speedY = -2 * blockSpeed;
+					break; // bottom Side Blocks 
+			}
+			upgradeObj = new component(40,40,"green",x,y,function(c){
+				if(c.isTouching(player)){
+					upgrades += 1;
+					gameObjects.remove(c);
+					console.log("Upgrade Level"+upgrades);
 				}
-				theShot = new component(40,40,"green",planeX,planeY,function(c){
-					if(c.isTouching(obj)){
-						gameObjects.remove(c);
-						console.log("destroyeddd an obj");
-					}
-					if(!c.isOnScreen()){
-						gameObjects.remove(c);
-					}
-				}, "Shot");
-				theShot.speedX = speedX;
-				theShot.speedY = speedY;
-				gameObjects.add(theShot,1);
-			}, 5000);
-					
+				if(!c.isOnScreen()){
+					gameObjects.remove(c);
+				}
+			}, "upgradeObj");
+			upgradeObj.speedX = speedX;
+			upgradeObj.speedY = speedY;
+			gameObjects.add(upgradeObj,1);
 
-					
+
 
 			scoreboard.level.innerText = num;
 
@@ -172,7 +151,6 @@ function gameUpdate(){
 
 function spawnObject(){
 	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
-	// side = 3
 	x=0;
 	y=0;
 	speedX = 0;
@@ -251,6 +229,12 @@ function component(width, height, color, x, y, action, type){
 		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
+	}else if(type == "upgradeObj"){
+		this.img = new Image();
+		this.img.src = "./images/1920x1080.jpg";
+		this.img.onload = () => {
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+		};
 	}
 
 	this.update = function(){
@@ -265,7 +249,8 @@ function component(width, height, color, x, y, action, type){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}else if (type == "Shot"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			
+		}else if (type == "upgradeObj") {
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
 
 	}
@@ -279,16 +264,6 @@ function component(width, height, color, x, y, action, type){
 		}
 		return yes;
 	}
-	// this.isShooted = function(other){
-	// 		let yes = true;
-	// 		if(other.x + other.width < this.x || this.x + this.width < other.x){
-	// 			yes = false;
-	// 		}
-	// 		if(other.y + other.height < this.y || this.y + this.height < other.y){
-	// 			yes = false;
-	// 		}
-	// 		return yes;
-	// }
 
 	this.isOnScreen = function(){
 		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
@@ -398,3 +373,30 @@ function resize(){
 	gameArea.canvas.height = inputSize.height.value;
 	reset();
 }
+
+
+
+setInterval(() => {
+	if (currentUpgrades != upgrades) {
+	//after Taking the upgrade will fire a missle
+		let directions = [-3,-2,-1,1,2,3]
+		x = planeX;
+		y = planeY;
+		speedY = directions[Math.floor(Math.random() * directions.length)];						
+		speedX = directions[Math.floor(Math.random() * directions.length)];
+		theShot = new component(40,40,"green",planeX,planeY,function(c){
+			if(c.isTouching(obj)){
+				gameObjects.remove(c);
+				console.log("destroyeddd an obj");
+			}
+			if(!c.isOnScreen()){
+				gameObjects.remove(c);
+			}
+		}, "Shot");
+		theShot.speedX = speedX;
+		theShot.speedY = speedY;
+		gameObjects.add(theShot,1);
+
+		currentUpgrades = upgrades
+	}
+}, 1000);
