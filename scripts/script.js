@@ -87,7 +87,8 @@ function gameUpdate(){
 			setInterval(() => {  //after Taking the upgrade will keep firing every 5 seconds 
 				// the Shot just needs to know how to make it destroy the block it touches
 				upgrades += 1;
-				side = Math.trunc(Math.random() * 4);
+				// side = Math.trunc(Math.random() * 4);
+				side = 4;
 				speedX = 0;
 				speedY = 0;
 				switch(side){
@@ -110,7 +111,27 @@ function gameUpdate(){
 						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
 						y = planeY;
 						speedY = -1 * blockSpeed;
-						break; // bottom Side Blocks 
+						break; // bottom Side Blocks
+					case 4:
+						// object.x = object.x + speed * Math.cos(angleRad);
+						// object.y = object.y + speed * Math.sin(angleRad);
+						var angle = Math.trunc(Math.random() * 180); //angle in degrees
+						var angleRad = angle * (Math.PI/180); //angle in radians
+						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+						y = planeY;
+						speedY = -1 * Math.sin(angleRad) + 1;						
+						speedX = Math.cos(angleRad);
+						console.log(speedX, speedY)
+						break; // top radius
+					case 5:
+						var angle = Math.trunc(Math.random() * 180); //angle in degrees
+						var angleRad = angle * (Math.PI/180); //angle in radians
+						x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+						y = planeY;
+						speedY = Math.sin(angleRad);						
+						speedX = -1 * Math.cos(angleRad) + 1;
+						console.log(speedX, speedY)
+						break; // bottom radius
 				}
 				theShot = new component(40,40,"green",planeX,planeY,function(c){
 					if(c.isTouching(obj)){
