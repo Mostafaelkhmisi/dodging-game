@@ -1,6 +1,5 @@
 // const canvas = document.getElementById('canvas');
 // const ctx = canvas.getContext('2d');
-
 let player;
 let theShot = null;
 let gameLife;
@@ -18,6 +17,10 @@ let upgrades=0;
 let currentUpgrades=0;
 let planeX;
 let planeY;
+var numberOfParticules = 30;
+var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+
+let AllUpgrades=[]
 
 let overlay = document.getElementById("overlay")
 
@@ -77,6 +80,7 @@ function init(){
 	}, "image");
 	gameObjects.add(player,2);
 	player.update();
+
 }
 
 function gameUpdate(){
@@ -155,6 +159,7 @@ function spawnObject(){
 	y=0;
 	speedX = 0;
 	speedY = 0;
+
 	switch(side){
 		case 0:
 			x = -20;
@@ -177,6 +182,7 @@ function spawnObject(){
 			speedY = -1 * blockSpeed;
 			break; // bottom Side Blocks 
 	}
+
 	obj = new component(40,40,"green",x,y,function(c){
 		if(c.isTouching(player)){
 			alive = false;
@@ -186,6 +192,11 @@ function spawnObject(){
 		}
 		if (theShot != null) {
 			if(c.isTouching(theShot)){
+
+				// console.log(obj.currentX,obj.currentY, "dddddd")
+
+				// animateParticules(obj.currentX, obj.currentY);
+				
 				console.log("bomb Destroyed");
 				gameObjects.remove(c);
 			}
@@ -197,6 +208,9 @@ function spawnObject(){
 	}, "blocks");
 	obj.speedX = speedX;
 	obj.speedY = speedY;
+
+
+
 	gameObjects.add(obj,1);
 }
 
@@ -209,6 +223,8 @@ function component(width, height, color, x, y, action, type){
 	this.speedY = 0;
 	this.y = y;
 	this.action = action;
+	// let currentX;
+	// let currentY;
 	
 	if (type == "image") {
 		this.img = new Image();
@@ -243,15 +259,19 @@ function component(width, height, color, x, y, action, type){
 		this.y += this.speedY;
 		ctx = gameArea.context;
 		ctx.fillStyle = color;
-		if (type == "image") {
+		if (type == "image"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		}else if (type == "blocks"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}else if (type == "Shot"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		}else if (type == "upgradeObj") {
+		}else if (type == "upgradeObj"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
+
+			// this.currentX = this.x;
+			// this.currentY = this.y;
+			// console.log(this.currentX,this.currentY, "bbbbbbb")
 
 	}
 	this.isTouching = function(other){
@@ -357,6 +377,11 @@ function reset(){
 function start(){
 	gameObjects.clear(); //  RESET GAME AND START AGAIN
 	gameArea.clear();
+	upgrades=0;
+	currentUpgrades=0;
+	AllUpgrades.forEach(element => {
+		clearInterval(element);
+	});
 	init();
 	alive = true;
 	running = true;
@@ -376,27 +401,3 @@ function resize(){
 
 
 
-setInterval(() => {
-	if (currentUpgrades != upgrades) {
-	//after Taking the upgrade will fire a missle
-		let directions = [-3,-2,-1,1,2,3]
-		x = planeX;
-		y = planeY;
-		speedY = directions[Math.floor(Math.random() * directions.length)];						
-		speedX = directions[Math.floor(Math.random() * directions.length)];
-		theShot = new component(40,40,"green",planeX,planeY,function(c){
-			if(c.isTouching(obj)){
-				gameObjects.remove(c);
-				console.log("destroyeddd an obj");
-			}
-			if(!c.isOnScreen()){
-				gameObjects.remove(c);
-			}
-		}, "Shot");
-		theShot.speedX = speedX;
-		theShot.speedY = speedY;
-		gameObjects.add(theShot,1);
-
-		currentUpgrades = upgrades
-	}
-}, 1000);
