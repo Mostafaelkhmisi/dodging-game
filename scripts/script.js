@@ -20,7 +20,8 @@ let planeY;
 var numberOfParticules = 30;
 var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
 
-let AllUpgrades=[]
+let AllUpgrades=[];
+
 
 let overlay = document.getElementById("overlay")
 
@@ -129,7 +130,7 @@ function gameUpdate(){
 			}, "upgradeObj");
 			upgradeObj.speedX = speedX;
 			upgradeObj.speedY = speedY;
-			gameObjects.add(upgradeObj,1);
+			gameObjects.add(upgradeObj,4);
 
 
 
@@ -184,19 +185,21 @@ function spawnObject(){
 	}
 
 	obj = new component(40,40,"green",x,y,function(c){
+
 		if(c.isTouching(player)){
+
+			AllUpgrades.forEach(element => {
+				clearInterval(element);
+			});
 			alive = false;
 			running = false;
 			overlay.style.display = "flex";
 			console.log("Game finished with a score of: "+score);
+
 		}
 		if (theShot != null) {
-			if(c.isTouching(theShot)){
-
-				// console.log(obj.currentX,obj.currentY, "dddddd")
-
-				// animateParticules(obj.currentX, obj.currentY);
-				
+			if(c.isTouching(theShot) && theShot.isAlive){
+				animateParticules(c.x, c.y);
 				console.log("bomb Destroyed");
 				gameObjects.remove(c);
 			}
@@ -223,8 +226,7 @@ function component(width, height, color, x, y, action, type){
 	this.speedY = 0;
 	this.y = y;
 	this.action = action;
-	// let currentX;
-	// let currentY;
+	this.isAlive=true;
 	
 	if (type == "image") {
 		this.img = new Image();
@@ -268,10 +270,6 @@ function component(width, height, color, x, y, action, type){
 		}else if (type == "upgradeObj"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
-
-			// this.currentX = this.x;
-			// this.currentY = this.y;
-			// console.log(this.currentX,this.currentY, "bbbbbbb")
 
 	}
 	this.isTouching = function(other){
@@ -368,20 +366,26 @@ function clamp(low, high, test) {
 
 //Button event handlers
 function reset(){
+	console.log(gameObjects,"111111")
+
 	gameObjects.clear();
 	gameArea.clear();
+	console.log(gameObjects, "2222222")
+
 	init();
 	alive = true;
 }
 
 function start(){
-	gameObjects.clear(); //  RESET GAME AND START AGAIN
-	gameArea.clear();
-	upgrades=0;
-	currentUpgrades=0;
 	AllUpgrades.forEach(element => {
 		clearInterval(element);
 	});
+	gameObjects.clear(); //  RESET GAME AND START AGAIN
+	gameObjects.objects={};	
+
+	gameArea.clear();
+	upgrades=0;
+	currentUpgrades=0;
 	init();
 	alive = true;
 	running = true;

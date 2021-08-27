@@ -16,11 +16,19 @@ setInterval(() => {
 				// }
 				if(!c.isOnScreen()){
 					gameObjects.remove(c);
+					theShot.isAlive=false
 				}
+
+				if(!running){
+					gameObjects.remove(c);
+					theShot.isAlive=false
+					console.log("removed missle cuz game isnt running")
+				}
+
 			}, "Shot");
 			theShot.speedX = speedX;
 			theShot.speedY = speedY;
-			gameObjects.add(theShot,1);
+			gameObjects.add(theShot,3);
 		}, 2000);
 		upgrades+=1
 	}
@@ -41,10 +49,14 @@ setInterval(() => {
 				if(!c.isOnScreen()){
 					gameObjects.remove(c);
 				}
+				if(!running){
+					gameObjects.remove(c);
+					console.log("removed missle cuz game isnt running")
+				}
 			}, "Shot");
 			theShot.speedX = speedX;
 			theShot.speedY = speedY;
-			gameObjects.add(theShot,1);
+			gameObjects.add(theShot,3);
 	
 			upgrades+=1
 		}
