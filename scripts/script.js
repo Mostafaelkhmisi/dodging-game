@@ -1,5 +1,8 @@
-// const canvas = document.getElementById('canvas');
+const canvas = document.getElementById('canvas');
+canvas.width = window.innerWidth
+
 // const ctx = canvas.getContext('2d');
+
 let player;
 let theShot = null;
 let gameLife;
