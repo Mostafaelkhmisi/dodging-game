@@ -1,4 +1,5 @@
-
+var numberOfParticules = 80;
+var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
 
 function animateParticules(x, y) {
 	var circle = createCircle(x, y);

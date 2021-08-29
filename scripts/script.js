@@ -1,6 +1,11 @@
 const canvas = document.getElementById('canvas');
 canvas.width = window.innerWidth
 
+let bombImg = "./images/bomb.png";
+let planeImg = "./images/GL.png";
+let shotImg = "./images/test-image-3.jpg";
+let upgradeImg = "./images/upgradePic.jpg";
+
 // const ctx = canvas.getContext('2d');
 
 let player;
@@ -20,8 +25,7 @@ let upgrades=0;
 let currentUpgrades=0;
 let planeX;
 let planeY;
-var numberOfParticules = 30;
-var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+
 
 let AllUpgrades=[];
 
@@ -121,7 +125,7 @@ function gameUpdate(){
 					speedY = -2 * blockSpeed;
 					break; // bottom Side Blocks 
 			}
-			upgradeObj = new component(40,40,"green",x,y,function(c){
+			upgradeObj = new component(30,20,"green",x,y,function(c){
 				if(c.isTouching(player)){
 					upgrades += 1;
 					gameObjects.remove(c);
@@ -233,26 +237,26 @@ function component(width, height, color, x, y, action, type){
 	
 	if (type == "image") {
 		this.img = new Image();
-		this.img.src = "./images/giphy.png";
+		this.img.src = planeImg;
 		this.img.onload = () => {
 			// ctx.clearRect(0, 0, this.width, this.height);
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
 	}else if (type == "blocks"){
 		this.img = new Image();
-		this.img.src = "./images/bomb.png";
+		this.img.src = bombImg;
 		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
 	}else if (type == "Shot"){
 		this.img = new Image();
-		this.img.src = "./images/test-image-3.jpg";
+		this.img.src = shotImg;
 		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
 	}else if(type == "upgradeObj"){
 		this.img = new Image();
-		this.img.src = "./images/1920x1080.jpg";
+		this.img.src = upgradeImg;
 		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
 		};
@@ -369,12 +373,8 @@ function clamp(low, high, test) {
 
 //Button event handlers
 function reset(){
-	console.log(gameObjects,"111111")
-
 	gameObjects.clear();
 	gameArea.clear();
-	console.log(gameObjects, "2222222")
-
 	init();
 	alive = true;
 }
