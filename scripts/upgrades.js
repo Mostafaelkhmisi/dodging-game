@@ -10,13 +10,13 @@ setInterval(() => {
 			speedY = directions[Math.floor(Math.random() * directions.length)];						
 			speedX = directions[Math.floor(Math.random() * directions.length)];
 			theShot = new component(40,40,"green",planeX,planeY,function(c){
-				// if(c.isTouching(obj)){
-				// 	gameObjects.remove(c);
-				// 	console.log("destroyeddd an obj");
-				// }
 				if(!c.isOnScreen()){
 					gameObjects.remove(c);
-					theShot.isAlive=false
+					c.isAlive=false
+				}
+
+				if(c.isAlive==false){
+					gameObjects.remove(c);
 				}
 
 				if(!running){

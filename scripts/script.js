@@ -6,6 +6,30 @@ let planeImg = "./images/GL.png";
 let shotImg = "./images/test-image-3.jpg";
 let upgradeImg = "./images/upgradePic.jpg";
 
+// function to make give images border-radius
+function roundedImage(ctx, x, y, width, height, radius) {
+	ctx.beginPath();
+	ctx.moveTo(x + radius, y);
+	ctx.lineTo(x + width - radius, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+	ctx.lineTo(x + width, y + height - radius);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+	ctx.lineTo(x + radius, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+	ctx.lineTo(x, y + radius);
+	ctx.quadraticCurveTo(x, y, x + radius, y);
+	ctx.closePath();
+}
+
+function triangleImage(ctx, x, y, width, height) {
+	ctx.beginPath();
+	ctx.moveTo(x , y+height-5);
+	ctx.lineTo(x + width, y+height-5);
+	ctx.lineTo(x + width / 2, y);
+	ctx.closePath();
+}
+
+
 // const ctx = canvas.getContext('2d');
 
 let player;
@@ -125,7 +149,7 @@ function gameUpdate(){
 					speedY = -2 * blockSpeed;
 					break; // bottom Side Blocks 
 			}
-			upgradeObj = new component(30,20,"green",x,y,function(c){
+			upgradeObj = new component(30,30,"green",x,y,function(c){
 				if(c.isTouching(player)){
 					upgrades += 1;
 					gameObjects.remove(c);
@@ -138,8 +162,6 @@ function gameUpdate(){
 			upgradeObj.speedX = speedX;
 			upgradeObj.speedY = speedY;
 			gameObjects.add(upgradeObj,4);
-
-
 
 			scoreboard.level.innerText = num;
 
@@ -206,7 +228,8 @@ function spawnObject(){
 		}
 		if (theShot != null) {
 			if(c.isTouching(theShot) && theShot.isAlive){
-				animateParticules(c.x, c.y);
+				animateParticules(c.x, c.y);  // the explotion animation with x and y
+				theShot.isAlive = false; // to destroy the shot too
 				console.log("bomb Destroyed");
 				gameObjects.remove(c);
 			}
@@ -239,26 +262,38 @@ function component(width, height, color, x, y, action, type){
 		this.img = new Image();
 		this.img.src = planeImg;
 		this.img.onload = () => {
-			// ctx.clearRect(0, 0, this.width, this.height);
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+			ctx.save();
+			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
+			ctx.clip();
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
+
 		};
 	}else if (type == "blocks"){
 		this.img = new Image();
 		this.img.src = bombImg;
 		this.img.onload = () => {
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		};
 	}else if (type == "Shot"){
 		this.img = new Image();
 		this.img.src = shotImg;
 		this.img.onload = () => {
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+			ctx.save();
+			triangleImage(ctx, this.x, this.y, this.width, this.height);
+			ctx.clip();
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
 		};
 	}else if(type == "upgradeObj"){
 		this.img = new Image();
 		this.img.src = upgradeImg;
 		this.img.onload = () => {
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+			ctx.save();
+			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
+			ctx.clip();
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
 		};
 	}
 
@@ -269,13 +304,26 @@ function component(width, height, color, x, y, action, type){
 		ctx = gameArea.context;
 		ctx.fillStyle = color;
 		if (type == "image"){
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.width);
+			ctx.save();
+			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
+			ctx.clip();
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
+
 		}else if (type == "blocks"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}else if (type == "Shot"){
+			ctx.save();
+			triangleImage(ctx, this.x, this.y, this.width, this.height);
+			ctx.clip();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
 		}else if (type == "upgradeObj"){
+			ctx.save();
+			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
+			ctx.clip();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.restore();
 		}
 
 	}
