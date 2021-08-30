@@ -50,6 +50,8 @@ canvas{
 
 .canvasText{
 	position: absolute;
+	background-color: rgba(0,0,0,.7);
+    padding: 0px 10px 10px 10px;
 	color: #fff;
 	top: 0;
 	right: 0;
