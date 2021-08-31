@@ -82,69 +82,92 @@ function init(){
 			// speed = 5;
 		// }
 
+		// for speed bugs going more than or less than the speed limit
+		if (dSpeed > 5) {dSpeed = 5}
+		if (dSpeed < 0) {dSpeed = 0}
 
-if (dSpeed > 5) {dSpeed = 5}
-if (dSpeed < 0) {dSpeed = 0}
+		if (aSpeed > 5) {aSpeed = 5}
+		if (aSpeed < 0) {aSpeed = 0}
 
-if (aSpeed > 5) {aSpeed = 5}
-if (aSpeed < 0) {aSpeed = 0}
+		if (sSpeed > 5) {sSpeed = 5}
+		if (sSpeed < 0) {sSpeed = 0}
 
-if (sSpeed > 5) {sSpeed = 5}
-if (sSpeed < 0) {sSpeed = 0}
+		if (wSpeed > 5) {wSpeed = 5}
+		if (wSpeed < 0) {wSpeed = 0}
 
-if (wSpeed > 5) {wSpeed = 5}
-if (wSpeed < 0) {wSpeed = 0}
-if (wKeyPressed == false) {if (wSpeed != 0) {wSpeed-=0.25}}
+		// to maintain the Acceleration after pressing the btn for awhile
+		if (wKeyPressed == false) {
+			if (wSpeed != 0) {
+				wSpeed-=0.25;
+				c.y -= wSpeed;
+				c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
+				planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
+			}
+		}
+		if (aKeyPressed == false) {
+			if (aSpeed != 0) {
+				aSpeed-=0.25
+				c.x -= aSpeed;
+				c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
+				planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
+			}
+		}
+		if (sKeyPressed == false) {
+			if (sSpeed != 0) {
+				sSpeed-=0.25
+				c.y += sSpeed;
+				c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
+				planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
+			}
+		}
+		if (dKeyPressed == false) {
+			if (dSpeed != 0) {
+				dSpeed-=0.25
+				c.x += dSpeed;
+				c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
+				planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
+			}
+		}
 
-if (aKeyPressed == false) {if (aSpeed != 0) {aSpeed-=0.25}}
-
-if (sKeyPressed == false) {if (sSpeed != 0) {sSpeed-=0.25}}
-
-if (dKeyPressed == false) {if (dSpeed != 0) {dSpeed-=0.25}}
-
-
+		// Move Action Buttons
 		if(isKeyDown("w")){
-			if (wSpeed != 5) {wSpeed+=0.25}
+			if (wSpeed != 5) {wSpeed+=0.25} // acceleration speed
 
 			wKeyPressed = true;
-			// c.y -= speed;
 			c.y -= wSpeed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
 		}else{wKeyPressed = false;}
 
 		if(isKeyDown("s")){
-			if (sSpeed != 5) {sSpeed+=0.25}
+			if (sSpeed != 5) {sSpeed+=0.25} // acceleration speed
 
 			sKeyPressed = true
-			// c.y += speed;
 			c.y += sSpeed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
 		}else{sKeyPressed = false;}
 
 		if(isKeyDown("d")){
-			if (dSpeed != 5) {dSpeed+=0.25}
+			if (dSpeed != 5) {dSpeed+=0.25} // acceleration speed
 
 			dKeyPressed = true
-			// c.x += speed;
 			c.x += dSpeed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
 		}else{dKeyPressed = false;}
 
 		if(isKeyDown("a")){
-			if (aSpeed != 5) {aSpeed+=0.25}
+			if (aSpeed != 5) {aSpeed+=0.25} // acceleration speed
 
 			aKeyPressed = true
-			// c.x -= speed;
 			c.x -= aSpeed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
 		}else{aKeyPressed = false;}
 
 
-	}, "image");
+	}, "player");
 	gameObjects.add(player,2);
 	player.update();
 
@@ -293,7 +316,7 @@ function component(width, height, color, x, y, action, type){
 	this.action = action;
 	this.isAlive=true;
 	
-	if (type == "image") {
+	if (type == "player") {
 		this.img = new Image();
 		this.img.src = planeImg;
 		this.img.onload = () => {
@@ -338,7 +361,7 @@ function component(width, height, color, x, y, action, type){
 		this.y += this.speedY;
 		ctx = gameArea.context;
 		ctx.fillStyle = color;
-		if (type == "image"){
+		if (type == "player"){
 			ctx.save();
 			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
 			ctx.clip();
@@ -348,6 +371,7 @@ function component(width, height, color, x, y, action, type){
 		}else if (type == "blocks"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}else if (type == "Shot"){
+			console.log(this.speedX, this.speedY)
 			ctx.save();
 			triangleImage(ctx, this.x, this.y, this.width, this.height);
 			ctx.clip();
