@@ -32,7 +32,17 @@ let currentUpgrades=0;
 let planeX;
 let planeY;
 
-let keyPressed=false;
+let wSpeed=0;
+let aSpeed=0;
+let sSpeed=0;
+let dSpeed=0;
+
+
+// let keyPressed=false;
+let wKeyPressed=false;
+let sKeyPressed=false;
+let aKeyPressed=false;
+let dKeyPressed=false;
 
 let AllUpgrades=[];
 
@@ -69,45 +79,69 @@ function init(){
 		// 	speed = 2;
 		// }
 		// else{
-		// 	speed = 5;
+			// speed = 5;
 		// }
 
-		if (speed <= 0 && keyPressed == true) {
-			speed+=1
-			if (speed > 5) {
-				speed = 5
-			}
-		}
 
-		console.log(speed, keyPressed)
+if (dSpeed > 5) {dSpeed = 5}
+if (dSpeed < 0) {dSpeed = 0}
+
+if (aSpeed > 5) {aSpeed = 5}
+if (aSpeed < 0) {aSpeed = 0}
+
+if (sSpeed > 5) {sSpeed = 5}
+if (sSpeed < 0) {sSpeed = 0}
+
+if (wSpeed > 5) {wSpeed = 5}
+if (wSpeed < 0) {wSpeed = 0}
+if (wKeyPressed == false) {if (wSpeed != 0) {wSpeed-=0.25}}
+
+if (aKeyPressed == false) {if (aSpeed != 0) {aSpeed-=0.25}}
+
+if (sKeyPressed == false) {if (sSpeed != 0) {sSpeed-=0.25}}
+
+if (dKeyPressed == false) {if (dSpeed != 0) {dSpeed-=0.25}}
+
 
 		if(isKeyDown("w")){
+			if (wSpeed != 5) {wSpeed+=0.25}
 
-			keyPressed = true;
-			c.y -= speed;
+			wKeyPressed = true;
+			// c.y -= speed;
+			c.y -= wSpeed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
-		}else if(isKeyDown("s")){
+		}else{wKeyPressed = false;}
 
-			keyPressed = true
-			c.y += speed;
+		if(isKeyDown("s")){
+			if (sSpeed != 5) {sSpeed+=0.25}
+
+			sKeyPressed = true
+			// c.y += speed;
+			c.y += sSpeed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
-		}else if(isKeyDown("d")){
+		}else{sKeyPressed = false;}
 
-			keyPressed = true
-			c.x += speed;
+		if(isKeyDown("d")){
+			if (dSpeed != 5) {dSpeed+=0.25}
+
+			dKeyPressed = true
+			// c.x += speed;
+			c.x += dSpeed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
-		}else if(isKeyDown("a")){
+		}else{dKeyPressed = false;}
 
-			keyPressed = true
-			c.x -= speed;
+		if(isKeyDown("a")){
+			if (aSpeed != 5) {aSpeed+=0.25}
+
+			aKeyPressed = true
+			// c.x -= speed;
+			c.x -= aSpeed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
-		}else{
-			keyPressed = false
-		}
+		}else{aKeyPressed = false;}
 
 
 	}, "image");
