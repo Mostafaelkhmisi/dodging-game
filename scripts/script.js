@@ -10,29 +10,6 @@ let planeImg = "./images/GL.png";
 let shotImg = "./images/test-image-3.jpg";
 let upgradeImg = "./images/upgradePic.jpg";
 
-// function to make give images border-radius
-function roundedImage(ctx, x, y, width, height, radius) {
-	ctx.beginPath();
-	ctx.moveTo(x + radius, y);
-	ctx.lineTo(x + width - radius, y);
-	ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-	ctx.lineTo(x + width, y + height - radius);
-	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-	ctx.lineTo(x + radius, y + height);
-	ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-	ctx.lineTo(x, y + radius);
-	ctx.quadraticCurveTo(x, y, x + radius, y);
-	ctx.closePath();
-}
-
-function triangleImage(ctx, x, y, width, height) {
-	ctx.beginPath();
-	ctx.moveTo(x , y+height-5);
-	ctx.lineTo(x + width, y+height-5);
-	ctx.lineTo(x + width / 2, y);
-	ctx.closePath();
-}
-
 
 // const ctx = canvas.getContext('2d');
 
@@ -42,7 +19,8 @@ let gameLife;
 let running = false;
 let initial = true;
 let blockSpeed = 2;
-let speed = 5;
+let speed = 0;
+let maxSpeed = 5;
 let alive = true;
 let diff;
 let score;
@@ -54,6 +32,7 @@ let currentUpgrades=0;
 let planeX;
 let planeY;
 
+let keyPressed=false;
 
 let AllUpgrades=[];
 
@@ -75,6 +54,8 @@ function startGame(){
 	init();
 }
 
+
+
 function init(){
 	gameLife = 0;
 	score = 0;
@@ -84,32 +65,48 @@ function init(){
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
 	player = new component(30,30,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
-		if(isKeyDown("shift")){
-			speed = 2;
+		// if(isKeyDown("shift")){
+		// 	speed = 2;
+		// }
+		// else{
+		// 	speed = 5;
+		// }
+
+		if (speed <= 0 && keyPressed == true) {
+			speed+=1
+			if (speed > 5) {
+				speed = 5
+			}
 		}
-		else{
-			speed = 5;
-		}
-		
+
+		console.log(speed, keyPressed)
+
 		if(isKeyDown("w")){
+
+			keyPressed = true;
 			c.y -= speed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
-		}
-		if(isKeyDown("s")){
+		}else if(isKeyDown("s")){
+
+			keyPressed = true
 			c.y += speed;
 			c.y = clamp(0,gameArea.canvas.height-c.height,c.y);
 			planeY = clamp(0,gameArea.canvas.height-c.height,c.y);
-		}
-		if(isKeyDown("d")){
+		}else if(isKeyDown("d")){
+
+			keyPressed = true
 			c.x += speed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
-		}
-		if(isKeyDown("a")){
+		}else if(isKeyDown("a")){
+
+			keyPressed = true
 			c.x -= speed;
 			c.x = clamp(0,gameArea.canvas.width-c.width,c.x);
 			planeX = clamp(0,gameArea.canvas.width-c.width,c.x);
+		}else{
+			keyPressed = false
 		}
 
 
