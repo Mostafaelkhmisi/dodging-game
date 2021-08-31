@@ -370,10 +370,14 @@ function component(width, height, color, x, y, action, type){
 
 		}else if (type == "blocks"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+
 		}else if (type == "Shot"){
 			console.log(this.speedX, this.speedY)
 			ctx.save();
-			triangleImage(ctx, this.x, this.y, this.width, this.height);
+			// triangleImage(ctx, this.x, this.y, this.width, this.height);
+
+			triangleImage(ctx, this.x, this.y, this.width, this.height);  // test Directions
+
 			ctx.clip();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			ctx.restore();
