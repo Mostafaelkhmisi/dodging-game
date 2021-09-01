@@ -10,8 +10,10 @@ let planeImg = "./images/GL.png";
 let shotImg = "./images/test-image-3.jpg";
 let upgradeImg = "./images/upgradePic.jpg";
 
+let initialPositionX = gameArea.canvas.width/2-5;
+let initialPositionY = gameArea.canvas.height/2-5;
 
-// const ctx = canvas.getContext('2d');
+const cc = canvas.getContext('2d');
 
 let player;
 let theShot = null;
@@ -29,8 +31,8 @@ let progress;
 let upgradeObj;
 let upgrades=0;
 let currentUpgrades=0;
-let planeX;
-let planeY;
+let planeX = initialPositionX;
+let planeY = initialPositionY;
 
 let wSpeed=0;
 let aSpeed=0;
@@ -74,7 +76,7 @@ function init(){
 	progress = 0;
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
-	player = new component(30,30,"red",gameArea.canvas.width/2-5,gameArea.canvas.height/2-5,function(c){
+	player = new component(30,30,"red",initialPositionX,initialPositionY,function(c){
 		// if(isKeyDown("shift")){
 		// 	speed = 2;
 		// }
@@ -305,182 +307,6 @@ function spawnObject(){
 	gameObjects.add(obj,1);
 }
 
-function component(width, height, color, x, y, action, type){
-	this.width = width;
-	this.height = height;
-	this.color = color;
-	this.x = x;
-	this.speedX = 0;
-	this.speedY = 0;
-	this.y = y;
-	this.action = action;
-	this.isAlive=true;
-	
-	if (type == "player") {
-		this.img = new Image();
-		this.img.src = planeImg;
-		this.img.onload = () => {
-			ctx.save();
-			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-
-		};
-	}else if (type == "blocks"){
-		this.img = new Image();
-		this.img.src = bombImg;
-		this.img.onload = () => {
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		};
-	}else if (type == "Shot"){
-		this.img = new Image();
-		this.img.src = shotImg;
-		this.img.onload = () => {
-			ctx.save();
-			triangleImage(ctx, this.x, this.y, this.width, this.height);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-		};
-	}else if(type == "upgradeObj"){
-		this.img = new Image();
-		this.img.src = upgradeImg;
-		this.img.onload = () => {
-			ctx.save();
-			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-		};
-	}
-
-	this.update = function(){
-		action(this);
-		this.x += this.speedX;
-		this.y += this.speedY;
-		ctx = gameArea.context;
-		ctx.fillStyle = color;
-		if (type == "player"){
-			ctx.save();
-			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-
-		}else if (type == "blocks"){
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-
-		}else if (type == "Shot"){
-			console.log(this.speedX, this.speedY)
-			ctx.save();
-			// triangleImage(ctx, this.x, this.y, this.width, this.height);
-
-			triangleImage(ctx, this.x, this.y, this.width, this.height);  // test Directions
-
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-		}else if (type == "upgradeObj"){
-			ctx.save();
-			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-		}
-
-	}
-	this.isTouching = function(other){
-		let yes = true;
-		if(other.x + other.width -5 < this.x || this.x + this.width -5 < other.x){
-			yes = false;
-		}
-		if(other.y + other.height -5 < this.y || this.y + this.height -5 < other.y){
-			yes = false;
-		}
-		return yes;
-	}
-
-	this.isOnScreen = function(){
-		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
-			return true;
-		}
-		if(this.y + this.height > 0 || this.y < gameArea.canvas.height){
-			return true;
-		}
-		return false;
-	}
-	this.update();
-}
-
-let gameObjects = {
-	objects : {},
-	add : function(obj, layer){
-		if(layer in gameObjects.objects){
-			gameObjects.objects[layer].push(obj);
-		}
-		else{
-			gameObjects.objects[layer] = new Array();
-			gameObjects.objects[layer].push(obj);
-		}
-	},
-	remove : function(obj){
-		for(let layer in gameObjects.objects){
-			let i = gameObjects.objects[layer].indexOf(obj)
-			if(i != -1){
-				gameObjects.objects[layer].splice(i,1);
-			}
-		}
-	},
-	clear : function(){
-		gameObjects.objects = {};
-	},
-	update : function(){
-		let highest = 0;
-		for(let layer in gameObjects.objects){
-			if(highest < layer){
-				highest = layer;
-			}
-		}
-		for(let layer = 0; layer <= highest; layer++){
-			if(layer in gameObjects.objects){
-				for(let i = 0; i < gameObjects.objects[layer].length; i++){
-					gameObjects.objects[layer][i].update();
-				}
-			}
-		}
-	},
-}
-
-let gameArea = {
-	canvas : document.getElementById("canvas"),
-	start : function(){
-		this.context = this.canvas.getContext("2d");
-		this.interval = setInterval(updateGameArea, 20);
-	},
-	clear : function(){
-		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	}
-}
-
-function updateGameArea() {
-	if(running){
-		gameLife += 1;
-		gameArea.clear();
-		gameUpdate();
-		gameObjects.update();
-	}
-}
-
-function clamp(low, high, test) {
-	if(test < low){
-		return low;
-	}
-	if(test > high){
-		return high;
-	}
-	return test;
-}
 
 //Button event handlers
 function reset(){
@@ -498,8 +324,13 @@ function start(){
 	gameObjects.objects={};	
 
 	gameArea.clear();
-	upgrades=0;
-	currentUpgrades=0;
+	setTimeout(() => {
+		upgrades=1;
+	currentUpgrades=1;	
+	}, 2000);
+
+	planeX=initialPositionX;
+	planeY=initialPositionY;
 	init();
 	alive = true;
 	running = true;
@@ -509,12 +340,6 @@ function start(){
 
 function stop(){
 	running = false;
-}
-
-function resize(){
-	gameArea.canvas.width = inputSize.width.value;
-	gameArea.canvas.height = inputSize.height.value;
-	reset();
 }
 
 
