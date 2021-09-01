@@ -1,9 +1,9 @@
 const canvas = document.getElementById('canvas');
-const backgroundVideo = document.getElementById('backgroundVideo');
+// const backgroundVideo = document.getElementById('backgroundVideo');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-backgroundVideo.height = window.innerHeight
+// backgroundVideo.height = window.innerHeight
 
 let bombImg = "./images/bomb.png";
 let planeImg = "./images/GL.png";

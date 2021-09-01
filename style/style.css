@@ -6,8 +6,8 @@ body{
 }
 
 canvas{
-	/* background-image: url("../images/space.jpg"); */
-	background-color: transparent;
+	background-image: url("../images/space.jpg");
+	/* background-color: transparent; */
 }
 .backgroundVideo{
 	object-fit: cover;
