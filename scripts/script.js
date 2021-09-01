@@ -16,7 +16,6 @@ let initialPositionY = gameArea.canvas.height/2-5;
 const cc = canvas.getContext('2d');
 
 let player;
-let theShot = null;
 let gameLife;
 let running = false;
 let initial = true;
@@ -33,6 +32,9 @@ let upgrades=0;
 let currentUpgrades=0;
 let planeX = initialPositionX;
 let planeY = initialPositionY;
+
+let ShotsFired=0;
+let Shots = [];
 
 let wSpeed=0;
 let aSpeed=0;
@@ -77,12 +79,6 @@ function init(){
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
 	player = new component(30,30,"red",initialPositionX,initialPositionY,function(c){
-		// if(isKeyDown("shift")){
-		// 	speed = 2;
-		// }
-		// else{
-			// speed = 5;
-		// }
 
 		// for speed bugs going more than or less than the speed limit
 		if (dSpeed > 5) {dSpeed = 5}
@@ -286,13 +282,16 @@ function spawnObject(){
 			console.log("Game finished with a score of: "+score);
 
 		}
-		if (theShot != null) {
-			if(c.isTouching(theShot) && theShot.isAlive){
-				animateParticules(c.x, c.y);  // the explotion animation with x and y
-				theShot.isAlive = false; // to destroy the shot too
-				console.log("bomb Destroyed");
-				gameObjects.remove(c);
-			}
+
+		if (Shots != null) {
+			Shots.forEach(element => {
+				if(c.isTouching(element) && element.isAlive){
+					animateParticules(c.x, c.y);  // the explotion animation with x and y
+					element.isAlive = false; // to destroy the shot too
+					console.log("bomb Destroyed");
+					gameObjects.remove(c);
+				}
+			});
 		}
 
 		if(!c.isOnScreen()){
@@ -301,7 +300,6 @@ function spawnObject(){
 	}, "blocks");
 	obj.speedX = speedX;
 	obj.speedY = speedY;
-
 
 
 	gameObjects.add(obj,1);

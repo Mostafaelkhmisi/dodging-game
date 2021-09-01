@@ -13,16 +13,17 @@ function roundedImage(ctx, x, y, width, height, radius) {
 	ctx.closePath();
 }
 
-function triangleImage(ctx, x, y, width, height) {
+function triangleImage(ctx, x, y, width, height, angle) {
+	ctx.translate(x, y);
+	ctx.rotate(angle);
+	ctx.translate(-x, -y);
+
 	ctx.beginPath();
 	ctx.moveTo(x , y+height-5);
 	ctx.lineTo(x + width, y+height-5);
 	ctx.lineTo(x + width / 2, y);
 	ctx.closePath();
 }
-
-
-
 
 
 function component(width, height, color, x, y, action, type){
@@ -35,6 +36,7 @@ function component(width, height, color, x, y, action, type){
 	this.y = y;
 	this.action = action;
 	this.isAlive=true;
+	this.angle;
 	
 	if (type == "player") {
 		this.img = new Image();
@@ -92,16 +94,12 @@ function component(width, height, color, x, y, action, type){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 
 		}else if (type == "Shot"){
-			// console.log(this.speedX, this.speedY)
 			ctx.save();
-			// triangleImage(ctx, this.x, this.y, this.width, this.height);
-
-			triangleImage(ctx, this.x, this.y, this.width, this.height);  // test Directions
-
-
+			triangleImage(ctx, this.x, this.y, this.width, this.height, this.angle)
 			ctx.clip();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			ctx.restore();
+			
 		}else if (type == "upgradeObj"){
 			ctx.save();
 			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
