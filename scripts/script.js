@@ -329,6 +329,8 @@ function start(){
 
 	planeX=initialPositionX;
 	planeY=initialPositionY;
+	Shots=[];
+	ShotsFired=0;
 	init();
 	alive = true;
 	running = true;
