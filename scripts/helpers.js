@@ -14,9 +14,9 @@ function roundedImage(ctx, x, y, width, height, radius) {
 }
 
 function triangleImage(ctx, x, y, width, height, angle) {
-	ctx.translate(x, y);
+	ctx.translate(x + (width / 2), y + (height/2));
 	ctx.rotate(angle);
-	ctx.translate(-x, -y);
+	ctx.translate(-x - (width / 2), -y - (height/2));
 
 	ctx.beginPath();
 	ctx.moveTo(x , y+height-5);
@@ -132,6 +132,65 @@ function component(width, height, color, x, y, action, type){
 	this.update();
 }
 
+
+
+function randomShotsWithObjectDetection(width, height, color, x, y, action, type){
+	this.width = width;
+	this.height = height;
+	this.color = color;
+	this.x = x;
+	this.speedX = 0;
+	this.speedY = 0;
+	this.y = y;
+	this.action = action;
+	this.isAlive=true;
+	this.angle;
+	
+	this.img = new Image();
+	this.img.src = shotImg;
+	this.img.onload = () => {
+		ctx.save();
+		triangleImage(ctx, this.x, this.y, this.width, this.height);
+		ctx.clip();
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		ctx.restore();
+	};
+
+	this.update = function(){
+		action(this);
+		this.x += this.speedX;
+		this.y += this.speedY;
+		ctx = gameArea.context;
+		ctx.fillStyle = color;
+		ctx.save();
+		triangleImage(ctx, this.x, this.y, this.width, this.height, this.angle)
+		ctx.clip();
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		ctx.restore();
+
+	}
+	this.isTouching = function(other){
+		let yes = true;
+		if(other.x + other.width -5 < this.x || this.x + this.width -5 < other.x){
+			yes = false;
+		}
+		if(other.y + other.height -5 < this.y || this.y + this.height -5 < other.y){
+			yes = false;
+		}
+		return yes;
+	}
+
+	this.isOnScreen = function(){
+		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
+			return true;
+		}
+		if(this.y + this.height > 0 || this.y < gameArea.canvas.height){
+			return true;
+		}
+		return false;
+	}
+	this.update();
+}
 
 
 
