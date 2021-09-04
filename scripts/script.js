@@ -344,3 +344,26 @@ function stop(){
 
 
 
+setInterval(() => {
+let AllGameObjects = gameObjects.objects[1];
+	if (AllGameObjects != null && running == true) {
+		var minLength = 10000000;
+		var minObj = null;
+		origX = planeX;
+		origY = planeY;
+		
+		AllGameObjects.forEach((element, index) => {
+			if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
+				minObj = element;
+				minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
+			 }
+		});
+		AllGameObjects.forEach((element, index) => {
+			if(element == minObj){
+				gameObjects.remove(element);
+			}else{ // the rest of objects
+			}
+		});
+	}
+}, 3000);
+
