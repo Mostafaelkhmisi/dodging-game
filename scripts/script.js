@@ -229,7 +229,7 @@ function gameUpdate(){
 	}
 	if(progress >= 100){
 		for(let i = 0; i < num; i++){
-			spawnObject();
+			// spawnObject();
 		}
 		progress = 0;
 	}
@@ -270,7 +270,7 @@ function spawnObject(){
 	}
 
 	obj = new component(40,40,"green",x,y,function(c){
-
+		
 		if(c.isTouching(player)){
 
 			AllUpgrades.forEach(element => {
@@ -315,6 +315,9 @@ function reset(){
 }
 
 function start(){
+	setTimeout(() => {
+		spawnObject();
+	}, 2000);
 	AllUpgrades.forEach(element => {
 		clearInterval(element);
 	});
@@ -344,26 +347,26 @@ function stop(){
 
 
 
-setInterval(() => {
-let AllGameObjects = gameObjects.objects[1];
-	if (AllGameObjects != null && running == true) {
-		var minLength = 10000000;
-		var minObj = null;
-		origX = planeX;
-		origY = planeY;
+// setInterval(() => {
+// let AllGameObjects = gameObjects.objects[1];
+// 	if (AllGameObjects != null && running == true) {
+// 		var minLength = 10000000;
+// 		var minObj = null;
+// 		origX = planeX;
+// 		origY = planeY;
 		
-		AllGameObjects.forEach((element, index) => {
-			if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
-				minObj = element;
-				minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
-			 }
-		});
-		AllGameObjects.forEach((element, index) => {
-			if(element == minObj){
-				gameObjects.remove(element);
-			}else{ // the rest of objects
-			}
-		});
-	}
-}, 3000);
+// 		AllGameObjects.forEach((element, index) => {
+// 			if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
+// 				minObj = element;
+// 				minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
+// 			 }
+// 		});
+// 		AllGameObjects.forEach((element, index) => {
+// 			if(element == minObj){
+// 				gameObjects.remove(element);
+// 			}else{ // the rest of objects
+// 			}
+// 		});
+// 	}
+// }, 3000);
 

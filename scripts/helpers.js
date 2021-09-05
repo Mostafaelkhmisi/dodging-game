@@ -146,6 +146,7 @@ function randomShotsWithObjectDetection(width, height, color, x, y, action, type
 	this.isAlive=true;
 	this.angle;
 	
+	
 	this.img = new Image();
 	this.img.src = shotImg;
 	this.img.onload = () => {
@@ -189,6 +190,7 @@ function randomShotsWithObjectDetection(width, height, color, x, y, action, type
 		}
 		return false;
 	}
+
 	this.update();
 }
 
