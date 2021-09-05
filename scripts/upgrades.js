@@ -17,7 +17,8 @@ setInterval(() => {
 			speedX = directions[Math.floor(Math.random() * directions.length)];
 			let angle = Math.atan2(speedY,  speedX) + 1.6;
 			ShotsFired++
-			Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,"cyan",planeX,planeY,function(c){
+
+			Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
 
 				if(!c.isOnScreen()){
 					gameObjects.remove(c);
@@ -36,49 +37,15 @@ setInterval(() => {
 
 
 
-			}, "Shot");
-
-
-
-
-		targetObject[ShotsFired] = closestObject;
-
-		setTimeout(() => {
-			missleDirection[ShotsFired] = setInterval(() => {
-				origX = targetObject[ShotsFired].x;
-				origY = targetObject[ShotsFired].y;
-				dx = (origX - Shots[ShotsFired].x) * .125;
-				dy = (origY - Shots[ShotsFired].y) * .125;
-				console.log(dx,dy)
-				//calculate the distance this would move ...
-				distance = Math.sqrt(dx*dx + dy*dy);
-				//... and cap it at 5px
-				if(distance > 5){
-					dx *= 3/distance;
-					dy *= 3/distance;
-				}
-
-				// console.log(dx, dy)
-				speedY = dx[Math.floor(Math.random() * dx.length)];
-				speedX = dy[Math.floor(Math.random() * dy.length)];
-				let angle = Math.atan2(dy,  dx) + 1.6;
-
-				Shots[ShotsFired].angle = angle;
-				Shots[ShotsFired].speedX = dx;
-				Shots[ShotsFired].speedY = dy;
-			}, 100);
-		}, 1000);
-
+			}, closestObject);
 			
-			Shots[ShotsFired].speedX += speedX;
-			Shots[ShotsFired].speedY += speedY;
+			Shots[ShotsFired].speedX = speedX;
+			Shots[ShotsFired].speedY = speedY;
 			Shots[ShotsFired].angle = angle;
 			gameObjects.add(Shots[ShotsFired],3);
 		}, 2000);
 		upgrades+=1
 	}
-
-
 
 
 	

@@ -134,10 +134,9 @@ function component(width, height, color, x, y, action, type){
 
 
 
-function randomShotsWithObjectDetection(width, height, color, x, y, action, type){
+function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.width = width;
 	this.height = height;
-	this.color = color;
 	this.x = x;
 	this.speedX = 0;
 	this.speedY = 0;
@@ -145,8 +144,14 @@ function randomShotsWithObjectDetection(width, height, color, x, y, action, type
 	this.action = action;
 	this.isAlive=true;
 	this.angle;
+	this.target = target;
+	this.targeting = false;
 	
-	
+	this.increaseY;
+	this.decreaseY;
+	this.increaseX;
+	this.decreaseX;
+
 	this.img = new Image();
 	this.img.src = shotImg;
 	this.img.onload = () => {
@@ -159,15 +164,44 @@ function randomShotsWithObjectDetection(width, height, color, x, y, action, type
 
 	this.update = function(){
 		action(this);
-		this.x += this.speedX;
-		this.y += this.speedY;
+		if (this.targeting == false) {
+			this.x += this.speedX;
+			this.y += this.speedY;	
+		}
 		ctx = gameArea.context;
-		ctx.fillStyle = color;
 		ctx.save();
 		triangleImage(ctx, this.x, this.y, this.width, this.height, this.angle)
 		ctx.clip();
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		ctx.restore();
+
+		setTimeout(() => {
+			// setInterval(() => {
+			// 	this.speedX
+			// }, 500);
+
+			this.targeting = true;
+			origX = this.target.x;
+			origY = this.target.y;
+			dx = (origX - this.x) * .125;
+			dy = (origY - this.y) * .125;
+			//calculate the distance this would move ...
+			distance = Math.sqrt(dx*dx + dy*dy);
+			//... and cap it at 5px
+			if(distance > 3){
+				dx *= 3/distance;
+				dy *= 3/distance;
+			}
+			
+			// speedY = dx[Math.floor(Math.random() * dx.length)];
+			// speedX = dy[Math.floor(Math.random() * dy.length)];
+			let angle = Math.atan2(dy,  dx) + 1.6;
+	
+			this.angle = angle;
+			this.x += dx - this.speedX;
+			this.y += dy - this-speedY;
+		}, 500);
+
 
 	}
 	this.isTouching = function(other){
