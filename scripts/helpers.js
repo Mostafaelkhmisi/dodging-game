@@ -198,8 +198,8 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 			let angle = Math.atan2(dy,  dx) + 1.6;
 	
 			this.angle = angle;
-			this.x += dx - this.speedX;
-			this.y += dy - this-speedY;
+			this.x += dx;
+			this.y += dy;
 		}, 500);
 
 
