@@ -288,6 +288,7 @@ function spawnObject(){
 				if(c.isTouching(element) && element.isAlive){
 					animateParticules(c.x, c.y);  // the explotion animation with x and y
 					element.isAlive = false; // to destroy the shot too
+					c.isAlive = false;
 					console.log("bomb Destroyed");
 					gameObjects.remove(c);
 				}

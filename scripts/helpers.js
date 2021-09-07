@@ -146,11 +146,8 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.angle;
 	this.target = target;
 	this.targeting = false;
-	
-	this.increaseY;
-	this.decreaseY;
-	this.increaseX;
-	this.decreaseX;
+	this.speedAfterBombDeathX;
+	this.speedAfterBombDeathY;
 
 	this.img = new Image();
 	this.img.src = shotImg;
@@ -176,9 +173,6 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		ctx.restore();
 
 		setTimeout(() => {
-			// setInterval(() => {
-			// 	this.speedX
-			// }, 500);
 
 			this.targeting = true;
 			origX = this.target.x;
@@ -187,20 +181,19 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 			dy = (origY - this.y) * .125;
 			//calculate the distance this would move ...
 			distance = Math.sqrt(dx*dx + dy*dy);
-			//... and cap it at 5px
+			//... and cap it at 3px
 			if(distance > 3){
 				dx *= 3/distance;
 				dy *= 3/distance;
 			}
-			
-			// speedY = dx[Math.floor(Math.random() * dx.length)];
-			// speedX = dy[Math.floor(Math.random() * dy.length)];
 			let angle = Math.atan2(dy,  dx) + 1.6;
-	
 			this.angle = angle;
 			this.x += dx;
 			this.y += dy;
+
 		}, 500);
+
+		
 
 
 	}
