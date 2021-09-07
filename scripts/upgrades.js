@@ -43,7 +43,7 @@ setInterval(() => {
 			Shots[ShotsFired].speedY = speedY;
 			Shots[ShotsFired].angle = angle;
 			gameObjects.add(Shots[ShotsFired],3);
-		}, 2000);
+		}, 4000);
 		upgrades+=1
 	}
 

@@ -146,8 +146,8 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.angle;
 	this.target = target;
 	this.targeting = false;
-	this.speedAfterBombDeathX;
-	this.speedAfterBombDeathY;
+	this.dx;
+	this.dy;
 
 	this.img = new Image();
 	this.img.src = shotImg;
@@ -172,28 +172,27 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		ctx.restore();
 
-		setTimeout(() => {
+		// setTimeout(() => {
 
 			this.targeting = true;
 			origX = this.target.x;
 			origY = this.target.y;
-			dx = (origX - this.x) * .125;
-			dy = (origY - this.y) * .125;
+			this.dx = (origX - this.x) * .125;
+			this.dy = (origY - this.y) * .125;
 			//calculate the distance this would move ...
-			distance = Math.sqrt(dx*dx + dy*dy);
-			//... and cap it at 3px
+			distance = Math.sqrt(this.dx*this.dx + this.dy*this.dy);
+			//... and cap it at 5px
 			if(distance > 3){
-				dx *= 3/distance;
-				dy *= 3/distance;
+				this.dx *= 3/distance;
+				this.dy *= 3/distance;
 			}
-			let angle = Math.atan2(dy,  dx) + 1.6;
+			
+			let angle = Math.atan2(this.dy,  this.dx) + 1.6;
+	
 			this.angle = angle;
-			this.x += dx;
-			this.y += dy;
-
-		}, 500);
-
-		
+			this.x += this.dx;
+			this.y += this.dy;
+		// }, 500);
 
 
 	}
