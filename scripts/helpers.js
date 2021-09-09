@@ -180,7 +180,7 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		if (this.isAlive == false) {
 			let AllGameObjects = gameObjects.objects[1];
 			if (AllGameObjects != null && running == true) {
-				var minLength = 11000;
+				var minLength = 8000;
 				var minObj = [];
 				origX = this.x;
 				origY = this.y;
