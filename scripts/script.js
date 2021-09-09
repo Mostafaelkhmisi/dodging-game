@@ -55,11 +55,6 @@ let currentShotsSpeedTimer=0;
 
 let overlay = document.getElementById("overlay")
 
-let inputSize = {
-	width : document.getElementById("width"),
-	height : document.getElementById("height"),
-}
-
 let scoreboard = {
 	score : document.getElementById("score"),
 	level : document.getElementById("level"),
@@ -69,7 +64,6 @@ function startGame(){
 	gameArea.start();
 	init();
 }
-
 
 
 function init(){
@@ -313,12 +307,6 @@ function spawnObject(){
 
 
 //Button event handlers
-function reset(){
-	gameObjects.clear();
-	gameArea.clear();
-	init();
-	alive = true;
-}
 
 function start(){
 	AllUpgrades.forEach(element => {
@@ -343,6 +331,13 @@ function start(){
 	running = true;
 
 	overlay.style.display = "none";
+}
+
+function reset(){
+	gameObjects.clear();
+	gameArea.clear();
+	init();
+	alive = true;
 }
 
 function stop(){

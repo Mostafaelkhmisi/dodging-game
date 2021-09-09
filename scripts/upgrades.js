@@ -31,8 +31,7 @@ setInterval(() => {
 						if(c.isAlive==false){
 							gameObjects.remove(c);
 						}
-		
-						if(!running){
+						if(!running && Shots[ShotsFired] != undefined){
 							gameObjects.remove(c);
 							Shots[ShotsFired].isAlive=false
 							console.log("removed missle cuz game isnt running")
@@ -52,7 +51,7 @@ setInterval(() => {
 
 		// }
 	}else{
-		clearInterval(shotsWithDetectionInterval)
+		clearInterval(randomShotsUpgrade)
 	}
 }, 1000);
 

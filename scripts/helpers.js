@@ -55,16 +55,6 @@ function component(width, height, color, x, y, action, type){
 		this.img.onload = () => {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		};
-	}else if (type == "Shot"){
-		this.img = new Image();
-		this.img.src = shotImg;
-		this.img.onload = () => {
-			ctx.save();
-			triangleImage(ctx, this.x, this.y, this.width, this.height);
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-		};
 	}else if(type == "upgradeObj"){
 		this.img = new Image();
 		this.img.src = upgradeImg;
@@ -93,13 +83,6 @@ function component(width, height, color, x, y, action, type){
 		}else if (type == "blocks"){
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 
-		}else if (type == "Shot"){
-			ctx.save();
-			triangleImage(ctx, this.x, this.y, this.width, this.height, this.angle)
-			ctx.clip();
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			ctx.restore();
-			
 		}else if (type == "upgradeObj"){
 			ctx.save();
 			roundedImage(ctx, this.x, this.y, this.width, this.height, 20);
