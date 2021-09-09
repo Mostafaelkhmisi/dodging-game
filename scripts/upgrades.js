@@ -3,58 +3,68 @@ let closestObject =[];
 let targetObject=[];
 let missleDirection=[];
 
+let shotsWithDetectionInterval;
+let randomShotsUpgrade;
+
 setInterval(() => {
+	if (running == true) {
 
-//  Upgrade One
-	if (upgrades == 1) {
-	//after Taking the upgrade will fire a missle
-	let directions = [-3,-2,-1,1,2,3]
-		x = planeX;
-		y = planeY;
+			//  Upgrade Two
+			//after Taking the upgrade will fire a missle
+			// let directions = [-3,-2,-1,1,2,3]
+		
+			if (shotsSpeedTimer != currentShotsSpeedTimer) {
+				clearInterval(randomShotsUpgrade);
+				randomShotsUpgrade = setInterval(() => {
+					// speedY = directions[Math.floor(Math.random() * directions.length)];
+					// speedX = directions[Math.floor(Math.random() * directions.length)];
+					// let angle = Math.atan2(speedY,  speedX) + 1.6;
+					ShotsFired++
+		
+					Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
+		
+						if(!c.isOnScreen()){
+							gameObjects.remove(c);
+							c.isAlive=false
+						}
+		
+						if(c.isAlive==false){
+							gameObjects.remove(c);
+						}
+		
+						if(!running){
+							gameObjects.remove(c);
+							Shots[ShotsFired].isAlive=false
+							console.log("removed missle cuz game isnt running")
+						}
+		
+					}, closestObject);
+					
+					// Shots[ShotsFired].speedX = speedX;
+					// Shots[ShotsFired].speedY = speedY;
+					// Shots[ShotsFired].angle = angle;
+					gameObjects.add(Shots[ShotsFired],3);
 
-		AllUpgrades[upgrades] = setInterval(() => {
-			speedY = directions[Math.floor(Math.random() * directions.length)];
-			speedX = directions[Math.floor(Math.random() * directions.length)];
-			let angle = Math.atan2(speedY,  speedX) + 1.6;
-			ShotsFired++
+				}, (shotsSpeedTimer+1000));
+				currentShotsSpeedTimer = shotsSpeedTimer
 
-			Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
+			}
 
-				if(!c.isOnScreen()){
-					gameObjects.remove(c);
-					c.isAlive=false
-				}
-
-				if(c.isAlive==false){
-					gameObjects.remove(c);
-				}
-
-				if(!running){
-					gameObjects.remove(c);
-					Shots[ShotsFired].isAlive=false
-					console.log("removed missle cuz game isnt running")
-				}
-
-
-
-			}, closestObject);
-			
-			Shots[ShotsFired].speedX = speedX;
-			Shots[ShotsFired].speedY = speedY;
-			Shots[ShotsFired].angle = angle;
-			gameObjects.add(Shots[ShotsFired],3);
-		}, 1000);
-		upgrades+=1
+		// }
+	}else{
+		clearInterval(shotsWithDetectionInterval)
 	}
+}, 1000);
 
 
-	
+
+
+
+	// setInterval(() => {
 	// //  Upgrade One
 	// if (upgrades == 1) {
 	// //after Taking the upgrade will fire a missle
 	// 	let directions = [-3,-2,-1,1,2,3]
-	// 	x = planeX;
-	// 	y = planeY;
 
 	// 	AllUpgrades[upgrades] = setInterval(() => {
 	// 		speedY = directions[Math.floor(Math.random() * directions.length)];
@@ -86,8 +96,8 @@ setInterval(() => {
 	// 	}, 2000);
 	// 	upgrades+=1
 	// }
-        
-}, 1000);
+// }, 1000);
+
 
 
 setInterval(() => {

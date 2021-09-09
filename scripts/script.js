@@ -49,7 +49,9 @@ let aKeyPressed=false;
 let dKeyPressed=false;
 
 let AllUpgrades=[];
-
+let initialShotsSpeedTimer = 4000;
+let shotsSpeedTimer=initialShotsSpeedTimer;
+let currentShotsSpeedTimer=0;
 
 let overlay = document.getElementById("overlay")
 
@@ -205,19 +207,22 @@ function gameUpdate(){
 					speedY = -2 * blockSpeed;
 					break; // bottom Side Blocks 
 			}
-			upgradeObj = new component(30,30,"green",x,y,function(c){
-				if(c.isTouching(player)){
-					upgrades += 1;
-					gameObjects.remove(c);
-					console.log("Upgrade Level"+upgrades);
-				}
-				if(!c.isOnScreen()){
-					gameObjects.remove(c);
-				}
-			}, "upgradeObj");
-			upgradeObj.speedX = speedX;
-			upgradeObj.speedY = speedY;
-			gameObjects.add(upgradeObj,4);
+			if (shotsSpeedTimer > 500) {
+				upgradeObj = new component(30,30,"green",x,y,function(c){
+					if(c.isTouching(player)){
+						upgrades += 1;
+						shotsSpeedTimer = shotsSpeedTimer*0.1;
+						gameObjects.remove(c);
+						console.log("Upgrade Level"+upgrades);
+					}
+					if(!c.isOnScreen()){
+						gameObjects.remove(c);
+					}
+				}, "upgradeObj");
+				upgradeObj.speedX = speedX;
+				upgradeObj.speedY = speedY;
+				gameObjects.add(upgradeObj,4);
+			}
 
 			scoreboard.level.innerText = num;
 
@@ -332,6 +337,7 @@ function start(){
 	planeY=initialPositionY;
 	Shots=[];
 	ShotsFired=0;
+	shotsSpeedTimer=initialShotsSpeedTimer;
 	init();
 	alive = true;
 	running = true;

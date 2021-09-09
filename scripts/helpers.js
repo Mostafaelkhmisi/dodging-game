@@ -198,23 +198,26 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 			let AllGameObjects = gameObjects.objects[1];
 			if (AllGameObjects != null && running == true) {
 				var minLength = 11000;
-				var minObj = null;
+				var minObj = [];
 				origX = this.x;
 				origY = this.y;
 				AllGameObjects.forEach((element, index) => {
 					if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
-						minObj = element;
+						minObj.push(element);
 						minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
 					 }
 				});
-				AllGameObjects.forEach((element, index) => {
-					if(element == minObj){
-						// gameObjects.remove(element);
-						console.log(element)
-						animateParticules(element.x, element.y);
-						closestObject = element
-					}else{ // the rest of objects
-					}
+				AllGameObjects.forEach((element1, index) => {
+					minObj.forEach(element2 => {
+						if(element1 == element2){
+							animateParticules(element2.x, element2.y);
+							element2.isAlive=false
+							gameObjects.remove(element2);
+							closestObject = element2
+						}else{ // the rest of objects
+						}
+					});
+
 				});
 			}
 		}
@@ -234,32 +237,12 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 				});
 				AllGameObjects.forEach((element, index) => {
 					if(element == minObj){
-						// gameObjects.remove(element);
-						console.log(element)
 						this.target = element
 					}else{ // the rest of objects
 					}
 				});
 			}
 
-			this.targeting = true;
-			origX = this.target.x;
-			origY = this.target.y;
-			this.dx = (origX - this.x) * .125;
-			this.dy = (origY - this.y) * .125;
-			//calculate the distance this would move ...
-			distance = Math.sqrt(this.dx*this.dx + this.dy*this.dy);
-			//... and cap it at 5px
-			if(distance > 3){
-				this.dx *= 3/distance;
-				this.dy *= 3/distance;
-			}
-			
-			let angle = Math.atan2(this.dy,  this.dx) + 1.6;
-	
-			this.angle = angle;
-			this.x += this.dx;
-			this.y += this.dy;
 		}
 
 	}
