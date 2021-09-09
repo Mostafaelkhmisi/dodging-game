@@ -44,7 +44,7 @@ setInterval(() => {
 					// Shots[ShotsFired].angle = angle;
 					gameObjects.add(Shots[ShotsFired],3);
 
-				}, (shotsSpeedTimer+1000));
+				}, shotsSpeedTimer);
 				currentShotsSpeedTimer = shotsSpeedTimer
 
 			}

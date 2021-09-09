@@ -205,7 +205,8 @@ function gameUpdate(){
 				upgradeObj = new component(30,30,"green",x,y,function(c){
 					if(c.isTouching(player)){
 						upgrades += 1;
-						shotsSpeedTimer = shotsSpeedTimer*0.1;
+						shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
+						// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
 						gameObjects.remove(c);
 						console.log("Upgrade Level"+upgrades);
 					}
