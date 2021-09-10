@@ -227,7 +227,7 @@ function gameUpdate(){
 			progress += diff;
 		}
 	}
-	if(progress >= 100){
+	if(progress >= 100){ //  Increasing the number slows the objects spawn timer
 		for(let i = 0; i < num; i++){
 			spawnObject();
 		}
@@ -239,72 +239,7 @@ function gameUpdate(){
 	}
 }
 
-function spawnObject(){
-	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
-	x=0;
-	y=0;
-	speedX = 0;
-	speedY = 0;
 
-	switch(side){
-		case 0:
-			x = -20;
-			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-			speedX = blockSpeed;
-			break;  // Left Side Blocks 
-		case 2:
-			x = gameArea.canvas.width;
-			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-			speedX = -1 * blockSpeed;
-			break; // right Side Blocks 
-		case 1:
-			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-			y = -20;
-			speedY = blockSpeed;
-			break;  // top Side Blocks 
-		case 3:
-			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-			y = gameArea.canvas.height;
-			speedY = -1 * blockSpeed;
-			break; // bottom Side Blocks 
-	}
-
-	obj = new component(40,40,"green",x,y,function(c){
-		
-		if(c.isTouching(player)){
-
-			AllUpgrades.forEach(element => {
-				clearInterval(element);
-			});
-			alive = false;
-			running = false;
-			overlay.style.display = "flex";
-			console.log("Game finished with a score of: "+score);
-
-		}
-
-		if (Shots != null) {
-			Shots.forEach(element => {
-				if(c.isTouching(element) && element.isAlive){
-					animateParticules(c.x, c.y);  // the explotion animation with x and y
-					element.isAlive = false; // to destroy the shot too
-					c.isAlive = false;
-					console.log("bomb Destroyed");
-					gameObjects.remove(c);
-				}
-			});
-		}
-
-		if(!c.isOnScreen()){
-			gameObjects.remove(c);
-		}
-	}, "blocks");
-	obj.speedX = speedX;
-	obj.speedY = speedY;
-
-
-	gameObjects.add(obj,1);
-}
 
 
 //Button event handlers

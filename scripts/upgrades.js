@@ -7,52 +7,7 @@ let shotsWithDetectionInterval;
 let randomShotsUpgrade;
 
 setInterval(() => {
-	if (running == true) {
-
-			//  Upgrade Two
-			//after Taking the upgrade will fire a missle
-			// let directions = [-3,-2,-1,1,2,3]
-		
-			if (shotsSpeedTimer != currentShotsSpeedTimer) {
-				clearInterval(randomShotsUpgrade);
-				randomShotsUpgrade = setInterval(() => {
-					// speedY = directions[Math.floor(Math.random() * directions.length)];
-					// speedX = directions[Math.floor(Math.random() * directions.length)];
-					// let angle = Math.atan2(speedY,  speedX) + 1.6;
-					ShotsFired++
-		
-					Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
-		
-						if(!c.isOnScreen()){
-							gameObjects.remove(c);
-							c.isAlive=false
-						}
-		
-						if(c.isAlive==false){
-							gameObjects.remove(c);
-						}
-						if(!running && Shots[ShotsFired] != undefined){
-							gameObjects.remove(c);
-							Shots[ShotsFired].isAlive=false
-							console.log("removed missle cuz game isnt running")
-						}
-		
-					}, closestObject);
-					
-					// Shots[ShotsFired].speedX = speedX;
-					// Shots[ShotsFired].speedY = speedY;
-					// Shots[ShotsFired].angle = angle;
-					gameObjects.add(Shots[ShotsFired],3);
-
-				}, shotsSpeedTimer);
-				currentShotsSpeedTimer = shotsSpeedTimer
-
-			}
-
-		// }
-	}else{
-		clearInterval(randomShotsUpgrade)
-	}
+	spawnDetectingShot()
 }, 1000);
 
 
