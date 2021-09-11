@@ -78,29 +78,30 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		}
 
 		if (this.target.isAlive == false) {
-			let AllGameObjects = gameObjects.objects[1];
-			if (AllGameObjects != null && running == true) {
-				var minLength = 10000000;
-				var minObj = null;
-				origX = this.x;
-				origY = this.y;
-				AllGameObjects.forEach((element, index) => {
-					if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
-						minObj = element;
-						minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
-					 }
-				});
-				AllGameObjects.forEach((element, index) => {
-					if(element == minObj){
-						this.target = element
-					}else{ // the rest of objects
-					}
-				});
-			}
+			// let AllGameObjects = gameObjects.objects[1];
+			// if (AllGameObjects != null && running == true) {
+			// 	var minLength = 10000000;
+			// 	var minObj = null;
+			// 	origX = this.x;
+			// 	origY = this.y;
+			// 	AllGameObjects.forEach((element, index) => {
+			// 		if(Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2) < minLength){
+			// 			minObj = element;
+			// 			minLength = Math.pow(element.x - origX,2) + Math.pow(element.y - origY,2);
+			// 		 }
+			// 	});
+			// 	AllGameObjects.forEach((element, index) => {
+			// 		if(element == minObj){
+			// 			this.target = element
+			// 		}else{ // the rest of objects
+			// 		}
+			// 	});
+			// }
 
-			// let angle = (this.angle) / 180 * Math.PI;  // compensate angle -90°, conv. to rad
-			// this.x += 50 * Math.cos(angle);          // move ship
-			// this.y += 50 * Math.sin(angle);
+			// let angle = (this.angle - 90) / 180 * Math.PI;  // compensate angle -90°, conv. to rad
+			let angle = this.angle / 180 * Math.PI;  // compensate angle -90°, conv. to rad
+			this.x += Math.cos(angle) *3;          // move ship
+			this.y += Math.sin(angle) *3;
 		}
 
 	}
