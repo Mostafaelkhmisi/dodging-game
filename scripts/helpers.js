@@ -155,11 +155,12 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		ctx.restore();
 
-		// setTimeout(() => {
+		setTimeout(() => {
 
 			this.targeting = true;
 			origX = this.target.x;
 			origY = this.target.y;
+			//get the distance between the mouse and the ball on both axes
 			this.dx = (origX - this.x) * .125;
 			this.dy = (origY - this.y) * .125;
 			//calculate the distance this would move ...
@@ -175,7 +176,7 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 			this.angle = angle;
 			this.x += this.dx;
 			this.y += this.dy;
-		// }, 500);
+		}, 500);
 
 		if (this.isAlive == false) {
 			let AllGameObjects = gameObjects.objects[1];
@@ -413,15 +414,15 @@ function spawnDetectingShot(){
 
 		//  Upgrade Two
 		//after Taking the upgrade will fire a missle
-		// let directions = [-3,-2,-1,1,2,3]
+		let directions = [-3,-2,-1,1,2,3]
 	
 		if (shotsSpeedTimer != currentShotsSpeedTimer) {
 			clearInterval(randomShotsUpgrade);
 			randomShotsUpgrade = setInterval(() => {
 				//  This generates random number from directions variable to make it come out of a random place
-				// speedY = directions[Math.floor(Math.random() * directions.length)];
-				// speedX = directions[Math.floor(Math.random() * directions.length)];
-				// let angle = Math.atan2(speedY,  speedX) + 1.6;
+				speedY = directions[Math.floor(Math.random() * directions.length)];
+				speedX = directions[Math.floor(Math.random() * directions.length)];
+				let angle = Math.atan2(speedY,  speedX) + 1.6;
 				ShotsFired++
 	
 				Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
@@ -442,9 +443,9 @@ function spawnDetectingShot(){
 	
 				}, closestObject);
 				
-				// Shots[ShotsFired].speedX = speedX;
-				// Shots[ShotsFired].speedY = speedY;
-				// Shots[ShotsFired].angle = angle;
+				Shots[ShotsFired].speedX = speedX;
+				Shots[ShotsFired].speedY = speedY;
+				Shots[ShotsFired].angle = angle;
 				gameObjects.add(Shots[ShotsFired],3);
 
 			}, shotsSpeedTimer);
