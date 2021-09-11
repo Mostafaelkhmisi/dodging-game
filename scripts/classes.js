@@ -98,6 +98,9 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 				});
 			}
 
+			// let angle = (this.angle) / 180 * Math.PI;  // compensate angle -90°, conv. to rad
+			// this.x += 50 * Math.cos(angle);          // move ship
+			// this.y += 50 * Math.sin(angle);
 		}
 
 	}

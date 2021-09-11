@@ -262,6 +262,7 @@ function start(){
 	Shots=[];
 	ShotsFired=0;
 	shotsSpeedTimer=initialShotsSpeedTimer;
+	currentShotsSpeedTimer=0;
 	init();
 	alive = true;
 	running = true;

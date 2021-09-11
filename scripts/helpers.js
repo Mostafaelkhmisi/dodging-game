@@ -168,11 +168,10 @@ function spawnObject(){
 function spawnDetectingShot(){
 
 	if (running == true) {
-
 		//  Upgrade Two
 		//after Taking the upgrade will fire a missle
 		let directions = [-3,-2,-1,1,2,3]
-	
+
 		if (shotsSpeedTimer != currentShotsSpeedTimer) {
 			clearInterval(randomShotsUpgrade);
 			randomShotsUpgrade = setInterval(() => {
@@ -205,7 +204,7 @@ function spawnDetectingShot(){
 				Shots[ShotsFired].angle = angle;
 				gameObjects.add(Shots[ShotsFired],3);
 
-			}, shotsSpeedTimer);
+			}, shotsSpeedTimer-3000);
 			currentShotsSpeedTimer = shotsSpeedTimer
 
 		}
