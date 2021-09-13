@@ -99,11 +99,54 @@ function clamp(low, high, test) {
 
 
 function spawnObject(){
+	side = Math.trunc(Math.random() * 7); // this random linked with the bottom cases to show the blocks randomly
+	// side = 6; // this random linked with the bottom cases to show the blocks randomly
 	let speedX = 0;
 	let speedY = 0;
-	let x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-	let y = -20;
-	speedY = blockSpeed+1;
+
+	let blockType= "default";
+
+	switch(side){
+		case 0:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 2:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 1:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks  
+		case 3:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 4:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = 2;
+			speedX = 2;
+			break; // top left Side Blocks
+		case 5:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = 2;
+			speedX = -2;
+			break; // top right Side Blocks
+		case 6:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = 1;
+			blockType = "crazy";
+			break; // top right Side Blocks 
+	}
+
 
 	obj = new blocksEnemies(40,40,"green",x,y,function(c){
 		
@@ -147,7 +190,7 @@ function spawnObject(){
 		if(!c.isOnScreen()){
 			gameObjects.remove(c);
 		}
-	});
+	}, blockType);
 	obj.speedX = speedX;
 	obj.speedY = speedY;
 

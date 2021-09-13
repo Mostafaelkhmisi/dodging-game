@@ -232,61 +232,6 @@ function BulletsWithUpgrade(width, height, x, y, action, target){
 }
 
 
-
-function blocksEnemies(width, height, color, x, y, action){
-	this.width = width;
-	this.height = height;
-	this.color = color;
-	this.x = x;
-	this.y = y;
-	this.speedX = 0;
-	this.speedY = 0;
-	this.action = action;
-	this.isAlive=true;
-	this.angle;
-	this.hp = 100;
-	this.img = new Image();
-	this.img.src = bombImg;
-	this.img.onload = () => {
-		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-	};
-
-
-	this.update = function(){
-		action(this);
-		this.x += this.speedX;
-		this.y += this.speedY;
-		ctx = gameArea.context;
-		ctx.fillStyle = color;
-		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-
-		console.log(this.x, this.y , this.speedX, this.speedY)
-
-	}
-	this.isTouching = function(other){
-		let yes = true;
-		if(other.x + other.width -5 < this.x || this.x + this.width -5 < other.x){
-			yes = false;
-		}
-		if(other.y + other.height -5 < this.y || this.y + this.height -5 < other.y){
-			yes = false;
-		}
-		return yes;
-	}
-
-	this.isOnScreen = function(){
-		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
-			return true;
-		}
-		if(this.y + this.height > 0 || this.y < gameArea.canvas.height){
-			return true;
-		}
-		return false;
-	}
-	this.update();
-}
-
-
 function upgradeObjectForMissiles(width, height, color, x, y, action){
 	this.width = width;
 	this.height = height;
@@ -403,7 +348,7 @@ function upgradeObjectForBullets(width, height, color, x, y, action){
 }
 
 
-function blocksEnemies(width, height, color, x, y, action){
+function blocksEnemies(width, height, color, x, y, action, blockType){
 	this.width = width;
 	this.height = height;
 	this.color = color;
@@ -414,6 +359,10 @@ function blocksEnemies(width, height, color, x, y, action){
 	this.action = action;
 	this.isAlive=true;
 	this.angle;
+	this.blockType=blockType;
+	this.crazySpeedX=0;
+	this.crazySpeedY=2;
+	this.crazyTypeSpeeds;
 	this.hp = 100;
 	this.img = new Image();
 	this.img.src = bombImg;
@@ -421,11 +370,25 @@ function blocksEnemies(width, height, color, x, y, action){
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 	};
 
+	if (this.isAlive == true) {
+		this.crazyTypeSpeeds = setInterval(() => {
+			this.crazySpeedX=Math.floor(Math.random() * (3 - -2 + 1) + -2);
+			this.crazySpeedY=Math.floor(Math.random() * (3 - -2 + 1) + -2);
+		}, 2000);
+	}else{
+		clearInterval(this.crazyTypeSpeeds);
+	}
+
 
 	this.update = function(){
 		action(this);
-		this.x += this.speedX;
-		this.y += this.speedY;
+		if (this.blockType == "crazy") {
+			this.x += this.crazySpeedX;
+			this.y += this.crazySpeedY;
+		}else {
+			this.x += this.speedX;
+			this.y += this.speedY;
+		}
 		ctx = gameArea.context;
 		ctx.fillStyle = color;
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
