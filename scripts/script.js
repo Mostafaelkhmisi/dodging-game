@@ -53,8 +53,8 @@ let aKeyPressed=false;
 let dKeyPressed=false;
 
 let AllUpgrades=[];
-let initialShotsSpeedTimer = 4000;
-let shotsSpeedTimer=initialShotsSpeedTimer;
+let initialMissilesSpeedTimer = 4000;
+let missislesSpeedTimer=initialMissilesSpeedTimer;
 
 let initialBulletsSpeedTimer = 2000;
 let bulletsSpeedTimer=initialBulletsSpeedTimer;
@@ -225,8 +225,8 @@ function start(){
 	Bullets=[];
 	MissilesFired=0;
 	BulletsFired=0;
-	
-	shotsSpeedTimer=initialShotsSpeedTimer;
+
+	missislesSpeedTimer=initialMissilesSpeedTimer;
 	bulletsSpeedTimer=initialBulletsSpeedTimer;
 
 	bulletUpgrades=0;

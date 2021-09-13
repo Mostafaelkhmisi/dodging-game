@@ -194,7 +194,7 @@ function spawnDetectingShot(){
 				Missiles[MissilesFired].angle = angle;
 				gameObjects.add(Missiles[MissilesFired],4);
 
-			}, shotsSpeedTimer);
+			}, missislesSpeedTimer);
 			currentMissilesUpgrades = missilesUpgrades
 
 		}
@@ -288,13 +288,13 @@ function spawnUpgradeForMissiles() {
 			speedY = -2 * blockSpeed;
 			break; // bottom Side Blocks 
 	}
-	if (shotsSpeedTimer > 500) {
+	if (missislesSpeedTimer > 500) {
 		upgradeObjectForMissile = new upgradeObjectForMissiles(30,30,"green",x,y,function(c){
 			if(c.isTouching(player)){
 				if (missilesUpgrades <= 4) {
 					missilesUpgrades += 1;
-					shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
-					// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
+					missislesSpeedTimer = missislesSpeedTimer-missislesSpeedTimer*0.1;
+					// missislesSpeedTimer = missislesSpeedTimer-missislesSpeedTimer*0.5;
 				}
 				currentWeapon = "Missiles";
 				gameObjects.remove(c);
