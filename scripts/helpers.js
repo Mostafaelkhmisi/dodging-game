@@ -291,10 +291,12 @@ function spawnUpgradeForMissiles() {
 	if (shotsSpeedTimer > 500) {
 		upgradeObjectForMissile = new upgradeObjectForMissiles(30,30,"green",x,y,function(c){
 			if(c.isTouching(player)){
-				missilesUpgrades += 1;
+				if (missilesUpgrades <= 4) {
+					missilesUpgrades += 1;
+					shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
+					// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
+				}
 				currentWeapon = "Missiles";
-				shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
-				// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
 				gameObjects.remove(c);
 				console.log("Missiles Upgrade Level"+missilesUpgrades);
 			}
@@ -340,10 +342,12 @@ function spawnUpgradeForBullets() {
 	if (bulletsSpeedTimer > 500) {
 		upgradeObjForBullets = new upgradeObjectForBullets(30,30,"green",x,y,function(c){
 			if(c.isTouching(player)){
-				bulletUpgrades += 1;
+				if (bulletUpgrades <= 9) {
+					bulletUpgrades += 1;
+					bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.1;
+					// bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.5;
+				}
 				currentWeapon = "Bullets";
-				bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.1;
-				// bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.5;
 				gameObjects.remove(c);
 				console.log("Bullet Upgrade Level"+bulletUpgrades);
 			}
