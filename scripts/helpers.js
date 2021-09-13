@@ -99,36 +99,13 @@ function clamp(low, high, test) {
 
 
 function spawnObject(){
-	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
-	x=0;
-	y=0;
-	speedX = 0;
-	speedY = 0;
+	let speedX = 0;
+	let speedY = 0;
+	let x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+	let y = -20;
+	speedY = blockSpeed+1;
 
-	switch(side){
-		case 0:
-			x = -20;
-			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-			speedX = blockSpeed;
-			break;  // Left Side Blocks 
-		case 2:
-			x = gameArea.canvas.width;
-			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-			speedX = -1 * blockSpeed;
-			break; // right Side Blocks 
-		case 1:
-			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-			y = -20;
-			speedY = blockSpeed;
-			break;  // top Side Blocks 
-		case 3:
-			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-			y = gameArea.canvas.height;
-			speedY = -1 * blockSpeed;
-			break; // bottom Side Blocks 
-	}
-
-	obj = new component(40,40,"green",x,y,function(c){
+	obj = new blocksEnemies(40,40,"green",x,y,function(c){
 		
 		if(c.isTouching(player)){
 
@@ -142,46 +119,59 @@ function spawnObject(){
 
 		}
 
-		if (Shots != null) {
-			Shots.forEach(element => {
+		if (Missiles != null) {
+			Missiles.forEach(element => {
 				if(c.isTouching(element) && element.isAlive){
-					animateParticules(c.x, c.y);  // the explotion animation with x and y
-					element.isAlive = false; // to destroy the shot too
-					c.isAlive = false;
-					console.log("bomb Destroyed");
-					gameObjects.remove(c);
+					element.isAlive = false; // to destroy the shot
+					c.hp = c.hp - 100;
 				}
 			});
+		}
+
+		if (Bullets != null) {
+			Bullets.forEach(element => {
+				if(c.isTouching(element) && element.isAlive){
+					element.isAlive = false; // to destroy the shot
+					c.hp = c.hp - 50;
+				}
+			});
+		}
+
+		if (c.hp <= 0) {
+			animateParticules(c.x, c.y);  // the explotion animation with x and y
+			c.isAlive = false;
+			console.log("bomb Destroyed");
+			gameObjects.remove(c);
 		}
 
 		if(!c.isOnScreen()){
 			gameObjects.remove(c);
 		}
-	}, "blocks");
+	});
 	obj.speedX = speedX;
 	obj.speedY = speedY;
 
 
-	gameObjects.add(obj,1);
+	gameObjects.add(obj,2);
 }
 
 function spawnDetectingShot(){
 
-	if (running == true) {
+	if (running == true && currentWeapon == "Missiles") {
 		//  Upgrade Two
 		//after Taking the upgrade will fire a missle
 		let directions = [-3,-2,-1,1,2,3]
 
-		if (shotsSpeedTimer != currentShotsSpeedTimer) {
+		if (missilesUpgrades != currentMissilesUpgrades) {
 			clearInterval(randomShotsUpgrade);
 			randomShotsUpgrade = setInterval(() => {
 				//  This generates random number from directions variable to make it come out of a random place
 				speedY = directions[Math.floor(Math.random() * directions.length)];
 				speedX = directions[Math.floor(Math.random() * directions.length)];
 				let angle = Math.atan2(speedY,  speedX) + 1.6;
-				ShotsFired++
+				MissilesFired++
 	
-				Shots[ShotsFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
+				Missiles[MissilesFired] = new randomShotsWithObjectDetection(40,40,planeX,planeY,function(c){
 	
 					if(!c.isOnScreen()){
 						gameObjects.remove(c);
@@ -191,27 +181,179 @@ function spawnDetectingShot(){
 					if(c.isAlive==false){
 						gameObjects.remove(c);
 					}
-					if(!running && Shots[ShotsFired] != undefined){
+					if(!running && Missiles[MissilesFired] != undefined){
 						gameObjects.remove(c);
-						Shots[ShotsFired].isAlive=false
+						Missiles[MissilesFired].isAlive=false
 						console.log("removed missle cuz game isnt running")
 					}
 	
 				}, closestObject);
 				
-				Shots[ShotsFired].speedX = speedX;
-				Shots[ShotsFired].speedY = speedY;
-				Shots[ShotsFired].angle = angle;
-				gameObjects.add(Shots[ShotsFired],3);
+				Missiles[MissilesFired].speedX = speedX;
+				Missiles[MissilesFired].speedY = speedY;
+				Missiles[MissilesFired].angle = angle;
+				gameObjects.add(Missiles[MissilesFired],4);
 
-			}, shotsSpeedTimer-3000);
-			currentShotsSpeedTimer = shotsSpeedTimer
+			}, shotsSpeedTimer);
+			currentMissilesUpgrades = missilesUpgrades
 
 		}
 
 	// }
 	}else{
 		clearInterval(randomShotsUpgrade)
+	}
+}
+
+
+function spawnBullets(){
+
+	if (running == true && currentWeapon == "Bullets") {
+		//  Upgrade Two
+		//after Taking the upgrade will fire a missle
+		// let directions = [-3,-2,-1,1,2,3]
+
+		if (bulletUpgrades != currentBulletsUpgrades) {
+			clearInterval(randomBulletsUpgrade);
+			randomBulletsUpgrade = setInterval(() => {
+				//  This generates random number from directions variable to make it come out of a random place
+				// speedY = directions[Math.floor(Math.random() * directions.length)];
+				// speedX = directions[Math.floor(Math.random() * directions.length)];
+				speedY = -3;
+				speedX = 0;
+				let angle = Math.atan2(speedY,  speedX) + 1.6;
+				BulletsFired++
+	
+				Bullets[BulletsFired] = new BulletsWithUpgrade(40,40,planeX,planeY,function(c){
+	
+					if(!c.isOnScreen()){
+						gameObjects.remove(c);
+						c.isAlive=false
+					}
+	
+					if(c.isAlive==false){
+						gameObjects.remove(c);
+					}
+					if(!running && Bullets[BulletsFired] != undefined){
+						gameObjects.remove(c);
+						Bullets[BulletsFired].isAlive=false
+						console.log("removed missle cuz game isnt running")
+					}
+	
+				}, closestObject);
+				
+				Bullets[BulletsFired].speedX = speedX;
+				Bullets[BulletsFired].speedY = speedY;
+				Bullets[BulletsFired].angle = angle;
+				gameObjects.add(Bullets[BulletsFired],5);
+
+			}, bulletsSpeedTimer);
+			currentBulletsUpgrades = bulletUpgrades
+
+		}
+
+	// }
+	}else{
+		clearInterval(randomBulletsUpgrade)
+	}
+}
+
+
+
+function spawnUpgradeForMissiles() {
+	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
+	x=0;
+	y=0;
+	speedX = 0;
+	speedY = 0;
+	switch(side){
+		case 0:
+			x = -20;
+			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+			speedX = blockSpeed+1;
+			break;  // Left Side Blocks 
+		case 2:
+			x = gameArea.canvas.width;
+			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+			speedX = -2 * blockSpeed;
+			break; // right Side Blocks 
+		case 1:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 3:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = gameArea.canvas.height;
+			speedY = -2 * blockSpeed;
+			break; // bottom Side Blocks 
+	}
+	if (shotsSpeedTimer > 500) {
+		upgradeObjectForMissile = new upgradeObjectForMissiles(30,30,"green",x,y,function(c){
+			if(c.isTouching(player)){
+				missilesUpgrades += 1;
+				currentWeapon = "Missiles";
+				shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
+				// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
+				gameObjects.remove(c);
+				console.log("Missiles Upgrade Level"+missilesUpgrades);
+			}
+			if(!c.isOnScreen()){
+				gameObjects.remove(c);
+			}
+		}, "upgradeObj");
+		upgradeObjectForMissile.speedX = speedX;
+		upgradeObjectForMissile.speedY = speedY;
+		gameObjects.add(upgradeObjectForMissile,3);
+	}
+}
+
+
+function spawnUpgradeForBullets() {
+	side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
+	x=0;
+	y=0;
+	speedX = 0;
+	speedY = 0;
+	switch(side){
+		case 0:
+			x = -20;
+			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+			speedX = blockSpeed+1;
+			break;  // Left Side Blocks 
+		case 2:
+			x = gameArea.canvas.width;
+			y = Math.trunc(Math.random() * gameArea.canvas.height-20);
+			speedX = -2 * blockSpeed;
+			break; // right Side Blocks 
+		case 1:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = -20;
+			speedY = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 3:
+			x = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			y = gameArea.canvas.height;
+			speedY = -2 * blockSpeed;
+			break; // bottom Side Blocks 
+	}
+	if (bulletsSpeedTimer > 500) {
+		upgradeObjForBullets = new upgradeObjectForBullets(30,30,"green",x,y,function(c){
+			if(c.isTouching(player)){
+				bulletUpgrades += 1;
+				currentWeapon = "Bullets";
+				bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.1;
+				// bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.5;
+				gameObjects.remove(c);
+				console.log("Bullet Upgrade Level"+bulletUpgrades);
+			}
+			if(!c.isOnScreen()){
+				gameObjects.remove(c);
+			}
+		}, "upgradeObj");
+		upgradeObjForBullets.speedX = speedX;
+		upgradeObjForBullets.speedY = speedY;
+		gameObjects.add(upgradeObjForBullets,3);
 	}
 }
 

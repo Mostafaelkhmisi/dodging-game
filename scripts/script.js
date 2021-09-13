@@ -7,8 +7,10 @@ const canvas = document.getElementById('canvas');
 
 let bombImg = "./images/bomb.png";
 let planeImg = "./images/GL.png";
-let shotImg = "./images/test-image-3.jpg";
-let upgradeImg = "./images/upgradePic.jpg";
+let shotImg = "./images/bulletImage.png"; 
+let upgradeImgMissiles = "./images/upgradePic.jpg";
+let upgradeImgBullets = "./images/champ 4.png";
+let bulletImage = "./images/champ 5.png";
 
 let initialPositionX = gameArea.canvas.width/2-5;
 let initialPositionY = gameArea.canvas.height/2-5;
@@ -16,6 +18,9 @@ let initialPositionY = gameArea.canvas.height/2-5;
 const cc = canvas.getContext('2d');
 
 let player;
+let upgradeObjForBullet;
+let upgradeObjForMissile;
+
 let gameLife;
 let running = false;
 let initial = true;
@@ -27,14 +32,13 @@ let diff;
 let score;
 let num;
 let progress;
-let upgradeObj;
-let upgrades=0;
-let currentUpgrades=0;
 let planeX = initialPositionX;
 let planeY = initialPositionY;
 
-let ShotsFired=0;
-let Shots = [];
+let MissilesFired=0;
+let BulletsFired=0;
+let Missiles = [];
+let Bullets = [];
 
 let wSpeed=0;
 let aSpeed=0;
@@ -51,7 +55,15 @@ let dKeyPressed=false;
 let AllUpgrades=[];
 let initialShotsSpeedTimer = 4000;
 let shotsSpeedTimer=initialShotsSpeedTimer;
-let currentShotsSpeedTimer=0;
+
+let initialBulletsSpeedTimer = 2000;
+let bulletsSpeedTimer=initialBulletsSpeedTimer;
+
+let bulletUpgrades=0;
+let currentBulletsUpgrades=null;
+let missilesUpgrades=0;
+let currentMissilesUpgrades=null;
+let currentWeapon = "Bullets";
 
 let overlay = document.getElementById("overlay")
 
@@ -74,7 +86,7 @@ function init(){
 	progress = 0;
 	scoreboard.score.innerText = score;
 	scoreboard.level.innerText = num;
-	player = new component(30,30,"red",initialPositionX,initialPositionY,function(c){
+	player = new playerComponent(30,30,"red",initialPositionX,initialPositionY,function(c){
 
 		// for speed bugs going more than or less than the speed limit
 		if (dSpeed > 5) {dSpeed = 5}
@@ -161,8 +173,8 @@ function init(){
 		}else{aKeyPressed = false;}
 
 
-	}, "player");
-	gameObjects.add(player,2);
+	});
+	gameObjects.add(player,1);
 	player.update();
 
 }
@@ -172,52 +184,9 @@ function gameUpdate(){
 		if(diff >= 90){ // to calculate how fast to level up
 			diff = 20;
 			num += 1;
-
-
-			side = Math.trunc(Math.random() * 4); // this random linked with the bottom cases to show the blocks randomly
-			x=0;
-			y=0;
-			speedX = 0;
-			speedY = 0;
-			switch(side){
-				case 0:
-					x = -20;
-					y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-					speedX = blockSpeed+1;
-					break;  // Left Side Blocks 
-				case 2:
-					x = gameArea.canvas.width;
-					y = Math.trunc(Math.random() * gameArea.canvas.height-20);
-					speedX = -2 * blockSpeed;
-					break; // right Side Blocks 
-				case 1:
-					x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-					y = -20;
-					speedY = blockSpeed+1;
-					break;  // top Side Blocks 
-				case 3:
-					x = Math.trunc(Math.random() * gameArea.canvas.width-20);
-					y = gameArea.canvas.height;
-					speedY = -2 * blockSpeed;
-					break; // bottom Side Blocks 
-			}
-			if (shotsSpeedTimer > 500) {
-				upgradeObj = new component(30,30,"green",x,y,function(c){
-					if(c.isTouching(player)){
-						upgrades += 1;
-						shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.1;
-						// shotsSpeedTimer = shotsSpeedTimer-shotsSpeedTimer*0.5;
-						gameObjects.remove(c);
-						console.log("Upgrade Level"+upgrades);
-					}
-					if(!c.isOnScreen()){
-						gameObjects.remove(c);
-					}
-				}, "upgradeObj");
-				upgradeObj.speedX = speedX;
-				upgradeObj.speedY = speedY;
-				gameObjects.add(upgradeObj,4);
-			}
+			
+			spawnUpgradeForMissiles();
+			spawnUpgradeForBullets();
 
 			scoreboard.level.innerText = num;
 
@@ -240,8 +209,6 @@ function gameUpdate(){
 }
 
 
-
-
 //Button event handlers
 
 function start(){
@@ -252,17 +219,21 @@ function start(){
 	gameObjects.objects={};	
 
 	gameArea.clear();
-	setTimeout(() => {
-		upgrades=1;
-	currentUpgrades=1;	
-	}, 2000);
-
 	planeX=initialPositionX;
 	planeY=initialPositionY;
-	Shots=[];
-	ShotsFired=0;
+	Missiles=[];
+	Bullets=[];
+	MissilesFired=0;
+	BulletsFired=0;
+	
 	shotsSpeedTimer=initialShotsSpeedTimer;
-	currentShotsSpeedTimer=0;
+	bulletsSpeedTimer=initialBulletsSpeedTimer;
+
+	bulletUpgrades=0;
+	missilesUpgrades=0;
+	currentBulletsUpgrades=null;
+	currentMissilesUpgrades=null;
+	currentWeapon = "Bullets";
 	init();
 	alive = true;
 	running = true;

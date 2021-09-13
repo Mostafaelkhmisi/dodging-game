@@ -1,13 +1,16 @@
 let closestObject =[];
 
-let targetObject=[];
-let missleDirection=[];
+// let targetObject=[];
+// let missleDirection=[];
 
-let shotsWithDetectionInterval;
 let randomShotsUpgrade;
 
+let randomBulletsUpgrade;
+
+
 setInterval(() => {
-	spawnDetectingShot()
+	spawnDetectingShot();
+	spawnBullets();
 }, 1000);
 
 
@@ -55,7 +58,7 @@ setInterval(() => {
 
 
 setInterval(() => {
-	let AllGameObjects = gameObjects.objects[1];
+	let AllGameObjects = gameObjects.objects[2];
 	if (AllGameObjects != null && running == true) {
 		var minLength = 10000000;
 		var minObj = null;
