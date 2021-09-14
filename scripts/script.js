@@ -235,8 +235,8 @@ function start(){
 	missilesUpgrades=0;
 	currentBulletsUpgrades=null;
 	currentMissilesUpgrades=null;
-	currentWeapon = "Missiles";
-	// currentWeapon = "Bullets";
+	// currentWeapon = "Missiles";
+	currentWeapon = "Bullets";
 	init();
 	alive = true;
 	running = true;
