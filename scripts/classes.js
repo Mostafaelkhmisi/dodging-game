@@ -30,8 +30,8 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.update = function(){
 		action(this);
 		if (this.targeting == false) { 
-			this.currentYSpeed = this.speedY;
-			this.currentXSpeed = this.speedX;
+			// this.currentYSpeed = this.speedY;
+			// this.currentXSpeed = this.speedX;
 			this.x += this.speedX;
 			this.y += this.speedY;	
 		}
@@ -42,6 +42,12 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		ctx.restore();
 
+		if (this.dx != null && this.speedX > this.dx) {
+			this.speedX = this.dx;
+		}
+		if (this.dy != null && this.speedY > this.dy) {
+			this.speedY = this.dy;
+		}
 		setTimeout(() => {
 			this.targeting = true;
 			let data = getDistanceAndAngleAndDxDy(this.target.x, this.target.y, this.x, this.y)
@@ -49,6 +55,7 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 			this.x += data.dx;
 			this.y += data.dy;
 		}, 500);
+
 
 		if (this.isAlive == false) {
 			let AllGameObjects = gameObjects.objects[2];

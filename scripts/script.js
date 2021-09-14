@@ -65,6 +65,7 @@ let missilesUpgrades=0;
 let currentMissilesUpgrades=null;
 let currentWeapon = "Bullets";
 
+
 let overlay = document.getElementById("overlay")
 
 let scoreboard = {
@@ -199,6 +200,7 @@ function gameUpdate(){
 	if(progress >= 100){ //  Increasing the number slows the objects spawn timer
 		for(let i = 0; i < num; i++){
 			spawnObject();
+			// spawnUpgradeForBullets();
 		}
 		progress = 0;
 	}
@@ -233,7 +235,8 @@ function start(){
 	missilesUpgrades=0;
 	currentBulletsUpgrades=null;
 	currentMissilesUpgrades=null;
-	currentWeapon = "Bullets";
+	currentWeapon = "Missiles";
+	// currentWeapon = "Bullets";
 	init();
 	alive = true;
 	running = true;

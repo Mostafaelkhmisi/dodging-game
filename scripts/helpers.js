@@ -80,7 +80,7 @@ let gameArea = {
 	canvas : document.getElementById("canvas"),
 	start : function(){
 		this.context = this.canvas.getContext("2d");
-		this.interval = setInterval(updateGameArea, 20);
+		this.interval = setInterval(updateGameArea, 1000 / 35);
 	},
 	clear : function(){
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
@@ -250,52 +250,60 @@ function spawnDetectingShot(){
 
 
 function spawnBullets(){
+	let upgradeDirections = 0;
+
+	if (bulletUpgrades == 0) {
+		upgradeDirections = 0;
+	}else {
+		upgradeDirections = -2;
+	}
 
 	if (running == true && currentWeapon == "Bullets") {
 		//  Upgrade Two
 		//after Taking the upgrade will fire a missle
-		// let directions = [-3,-2,-1,1,2,3]
 
 		if (bulletUpgrades != currentBulletsUpgrades) {
 			clearInterval(randomBulletsUpgrade);
 			randomBulletsUpgrade = setInterval(() => {
 				//  This generates random number from directions variable to make it come out of a random place
-				// speedY = directions[Math.floor(Math.random() * directions.length)];
-				// speedX = directions[Math.floor(Math.random() * directions.length)];
-				speedY = -3;
-				speedX = 0;
-				let angle = Math.atan2(speedY,  speedX) + 1.6;
-				BulletsFired++
-	
-				Bullets[BulletsFired] = new BulletsWithUpgrade(40,40,planeX,planeY,function(c){
-	
-					if(!c.isOnScreen()){
-						gameObjects.remove(c);
-						c.isAlive=false
-					}
-	
-					if(c.isAlive==false){
-						gameObjects.remove(c);
-					}
-					if(!running && Bullets[BulletsFired] != undefined){
-						gameObjects.remove(c);
-						Bullets[BulletsFired].isAlive=false
-						console.log("removed missle cuz game isnt running")
-					}
-	
-				}, closestObject);
-				
-				Bullets[BulletsFired].speedX = speedX;
-				Bullets[BulletsFired].speedY = speedY;
-				Bullets[BulletsFired].angle = angle;
-				gameObjects.add(Bullets[BulletsFired],5);
+				for (let index = 0; index < bulletUpgrades+1; index++) {
+					// const element = array[index];
+
+					speedY = -3;
+					speedX = upgradeDirections + index;
+					let angle = Math.atan2(speedY,  speedX) + 1.6;
+					BulletsFired++
+		
+					Bullets[BulletsFired] = new BulletsWithUpgrade(40,40,planeX,planeY,function(c){
+		
+						if(!c.isOnScreen()){
+							gameObjects.remove(c);
+							c.isAlive=false
+						}
+		
+						if(c.isAlive==false){
+							gameObjects.remove(c);
+						}
+						if(!running && Bullets[BulletsFired] != undefined){
+							gameObjects.remove(c);
+							Bullets[BulletsFired].isAlive=false
+							console.log("removed missle cuz game isnt running")
+						}
+		
+					}, closestObject);
+					
+					Bullets[BulletsFired].speedX = speedX;
+					Bullets[BulletsFired].speedY = speedY;
+					Bullets[BulletsFired].angle = angle;
+					gameObjects.add(Bullets[BulletsFired],5);
+					
+				}
 
 			}, bulletsSpeedTimer);
 			currentBulletsUpgrades = bulletUpgrades
 
 		}
 
-	// }
 	}else{
 		clearInterval(randomBulletsUpgrade)
 	}
@@ -390,6 +398,7 @@ function spawnUpgradeForBullets() {
 					bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.1;
 					// bulletsSpeedTimer = bulletsSpeedTimer-bulletsSpeedTimer*0.5;
 				}
+				currentBulletsUpgrades = bulletUpgrades-1;
 				currentWeapon = "Bullets";
 				gameObjects.remove(c);
 				console.log("Bullet Upgrade Level"+bulletUpgrades);
