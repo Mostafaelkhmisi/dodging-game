@@ -413,7 +413,7 @@ function spawnUpgradeForBullets() {
 	}
 }
 
-function getDistanceAndAngleAndDxDy(targetX, targetY, thisX, thisY) {
+function getDistanceAndAngleAndDxDy(targetX, targetY, thisX, thisY, rocketSpeed) {
 	origX = targetX;
 	origY = targetY;
 	//get the distance between the mouse and the ball on both axes
@@ -422,9 +422,9 @@ function getDistanceAndAngleAndDxDy(targetX, targetY, thisX, thisY) {
 	//calculate the distance this would move ...
 	distance = Math.sqrt(dx*dx + dy*dy);
 	//... and cap it at 3px
-	if(distance > 3){
-		dx *= 3/distance;
-		dy *= 3/distance;
+	if(distance > rocketSpeed){
+		dx *= rocketSpeed/distance;
+		dy *= rocketSpeed/distance;
 	}
 	return {
 		distance: distance,

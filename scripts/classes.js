@@ -1,5 +1,4 @@
 
-
 function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.width = width;
 	this.height = height;
@@ -15,8 +14,7 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.dx;
 	this.dy;
 	this.dmg = 100;
-	this.currentXSpeed;
-	this.currentYSpeed;
+	this.rocketSpeed = 0.5;
 	this.curveDone=false;
 
 
@@ -44,8 +42,6 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 	this.update = function(){
 		action(this);
 		if (this.targeting == false) { 
-			// this.currentYSpeed = this.speedY;
-			// this.currentXSpeed = this.speedX;
 			this.x += this.speedX;
 			this.y += this.speedY;	
 		}
@@ -104,13 +100,14 @@ function randomShotsWithObjectDetection(width, height, x, y, action, target){
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		ctx.restore();
 
-		setTimeout(() => {
+		// setTimeout(() => {
 			this.targeting = true;
-			let data = getDistanceAndAngleAndDxDy(this.target.x, this.target.y, this.x, this.y)
+			let data = getDistanceAndAngleAndDxDy(this.target.x, this.target.y, this.x, this.y, this.rocketSpeed)
 			this.angle = data.angle;
 			this.x += data.dx;
 			this.y += data.dy;
-		}, 500);
+			this.rocketSpeed += 0.1;
+		// }, 500);
 	// }
 
 		if (this.isAlive == false) {
