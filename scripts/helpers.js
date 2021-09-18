@@ -433,3 +433,95 @@ function getDistanceAndAngleAndDxDy(targetX, targetY, thisX, thisY, rocketSpeed)
 		dy:dy 
 	  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+////// Testing making Shapes
+
+
+function TestingShapes(){
+	side = Math.trunc(Math.random() * 2);
+	let speedX = 0;
+	let speedY = 0;
+
+	switch(side){
+		case 0:
+			y = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			x = -20;
+			speedY = 0;
+			speedX = blockSpeed+1;
+			break;  // top Side Blocks 
+		case 1:
+			y = Math.trunc(Math.random() * gameArea.canvas.width-20);
+			x = gameArea.canvas.width+20;
+			speedY = 0;
+			speedX = -(blockSpeed+1);
+			break;  // top Side Blocks 
+	}
+
+
+	// tryingShape.forEach(element => {
+		
+	// });
+	obj = new TestingShapesClass(40,40,"green",x,y,function(c){
+		
+		if(c.isTouching(player)){
+
+			AllUpgrades.forEach(element => {
+				clearInterval(element);
+			});
+			alive = false;
+			running = false;
+			overlay.style.display = "flex";
+			console.log("Game finished with a score of: "+score);
+
+		}
+
+		if (Missiles != null) {
+			Missiles.forEach(element => {
+				if(c.isTouching(element) && element.isAlive){
+					element.isAlive = false; // to destroy the shot
+					c.hp = c.hp - 100;
+				}
+			});
+		}
+
+		if (Bullets != null) {
+			Bullets.forEach(element => {
+				if(c.isTouching(element) && element.isAlive){
+					element.isAlive = false; // to destroy the shot
+					c.hp = c.hp - 50;
+				}
+			});
+		}
+
+		if (c.hp <= 0) {
+			animateParticules(c.x, c.y);  // the explotion animation with x and y
+			c.isAlive = false;
+			console.log("bomb Destroyed");
+			gameObjects.remove(c);
+		}
+
+		if(!c.isOnScreen()){
+			gameObjects.remove(c);
+		}
+	});
+	obj.speedX = speedX;
+	obj.speedY = speedY;
+
+
+	gameObjects.add(obj,2);
+}
+
+
+

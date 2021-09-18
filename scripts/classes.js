@@ -496,3 +496,62 @@ function playerComponent(width, height, color, x, y, action){
 	}
 	this.update();
 }
+
+
+
+
+
+
+
+
+////////////////////////  TESTING SHAPES
+
+function TestingShapesClass(width, height, color, x, y, action){
+	this.width = width;
+	this.height = height;
+	this.color = color;
+	this.x = x;
+	this.y = y;
+	this.speedX = 0;
+	this.speedY = 0;
+	this.action = action;
+	this.isAlive=true;
+	this.angle;
+	this.hp = 100;
+	this.img = new Image();
+	this.img.src = bombImg;
+	this.img.onload = () => {
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+	};
+
+
+	this.update = function(){
+		action(this);
+		this.x += this.speedX;
+		this.y += this.speedY;
+		ctx = gameArea.context;
+		ctx.fillStyle = color;
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+	}
+	this.isTouching = function(other){
+		let yes = true;
+		if(other.x + other.width -5 < this.x || this.x + this.width -5 < other.x){
+			yes = false;
+		}
+		if(other.y + other.height -5 < this.y || this.y + this.height -5 < other.y){
+			yes = false;
+		}
+		return yes;
+	}
+
+	this.isOnScreen = function(){
+		if(this.x + this.width > 0 || this.x < gameArea.canvas.width){
+			return true;
+		}
+		if(this.y + this.height > 0 || this.y < gameArea.canvas.height){
+			return true;
+		}
+		return false;
+	}
+	this.update();
+}

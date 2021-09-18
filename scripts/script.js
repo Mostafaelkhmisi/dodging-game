@@ -12,6 +12,12 @@ let upgradeImgMissiles = "./images/upgradePic.jpg";
 let upgradeImgBullets = "./images/champ 4.png";
 let bulletImage = "./images/champ 5.png";
 
+
+let tryingShape = [
+	["100", "50", "100", "60","100", "70","100", "80"],
+	["200", "50", "200", "60","200", "70","200", "80"]
+];
+
 let initialPositionX = gameArea.canvas.width/2-5;
 let initialPositionY = gameArea.canvas.height/2-5;
 
@@ -199,7 +205,8 @@ function gameUpdate(){
 	}
 	if(progress >= 100){ //  Increasing the number slows the objects spawn timer
 		for(let i = 0; i < num; i++){
-			spawnObject();
+			// spawnObject();
+			TestingShapes();
 			// spawnUpgradeForBullets();
 		}
 		progress = 0;
